@@ -5,14 +5,14 @@ import pytz
 
 @dataclass(frozen=True)
 class User:
+    username: str
+    email: str
+    password: str
     id: Optional[int] = None
-    username = str
-    full_name = Optional[str] = ''
-    email = str
-    password = str
-    is_active = Optional[bool] = True
-    is_staff = Optional[bool] = False
-    created_at = Optional[datetime] = field(default_factory=datetime.now)
+    full_name: Optional[str] = ''
+    is_active: Optional[bool] = True
+    is_staff: Optional[bool] = False
+    created_at: Optional[datetime] = field(default_factory=datetime.now)
     
     def __post_init__(self):
         dt_now = datetime.now(pytz.timezone('America/Sao_Paulo'))
