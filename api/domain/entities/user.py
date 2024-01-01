@@ -12,6 +12,7 @@ class User:
     full_name: Optional[str] = ''
     is_active: Optional[bool] = True
     is_staff: Optional[bool] = False
+    is_superuser: Optional[bool] = False
     created_at: Optional[datetime] = field(default_factory=datetime.now)
     
     def __post_init__(self):
@@ -36,5 +37,6 @@ class User:
             'password': self.password,
             'is_active': self.is_active,
             'is_staff': self.is_staff,
+            'is_superuser': self.is_superuser,
             'created_at': self.created_at
         }

@@ -5,6 +5,8 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, UserManager, PermissionsMixin, Group, Permission
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
+from api.domain.entities.user import User as UserEntity
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     """
@@ -87,6 +89,32 @@ class User(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    def to_entity(self) -> UserEntity:
+        return UserEntity(
+            id=self.pk,
+            username=self.username,
+            password=self.password,
+            email=self.email,
+            full_name=self.full_name,
+            is_staff=self.is_staff,
+            is_superuser=self.is_superuser,
+            is_active=self.is_active,
+            created_at=self.created_at
+        )
+
+    @staticmethod
+    def from_entity(user: UserEntity) -> "User":
+        return User(
+            username=user.username,
+            password=user.password,
+            email=user.email,
+            full_name=user.full_name,
+            is_staff=user.is_staff,
+            is_superuser=user.is_superuser,
+            is_active=user.is_active,
+            created_at=user.created_at
+        )
     
     class Meta:
         verbose_name = "user"
