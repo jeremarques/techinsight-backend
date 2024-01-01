@@ -1,31 +1,31 @@
+from typing import Optional
 from datetime import datetime
+from dataclasses import dataclass, field
 import pytz
 
-
+@dataclass(frozen=True)
 class User:
-    def __init__(self, username, email, password, created_at, full_name = '', is_active = True, is_staff = False, id = None):
-        self.id = id
-        self.username = username
-        self.full_name = full_name
-        self.email = email
-        self.password = password
-        self.is_active = is_active
-        self.is_staff = is_staff
-        self.created_at = created_at
-
+    id: Optional[int] = None
+    username = str
+    full_name = Optional[str] = ''
+    email = str
+    password = str
+    is_active = Optional[bool] = True
+    is_staff = Optional[bool] = False
+    created_at = Optional[datetime] = field(default_factory=datetime.now)
     
-    def check_created_at(self):
+    def __post_init__(self):
         dt_now = datetime.now(pytz.timezone('America/Sao_Paulo'))
-        self.dt_local = dt_now.strftime('%Y-%m-%d %H:%M:%S.%f')
+        dt_local = dt_now.strftime('%Y-%m-%d %H:%M:%S.%f')
 
         if not self.created_at:
-            self.created_at = self.dt_local
+            object.__setattr__(self, 'created_at', dt_local)
 
     def activate(self):
-        self.is_active = True
+        object.__setattr__(self, 'is_active', True)
 
     def deactivate(self):
-        self.is_active = False
+        object.__setattr__(self, 'is_active', False)
 
     def to_dict(self):
         return {
