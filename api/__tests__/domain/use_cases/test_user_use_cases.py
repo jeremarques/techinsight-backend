@@ -1,7 +1,7 @@
 import unittest
 
 from api.domain.entities.user import User
-from api.domain.use_cases.create_user import CreateUserUseCase
+from api.domain.use_cases.user import CreateUserUseCase
 
 class MockRepository:
     called_times = 0

@@ -17,3 +17,12 @@ class CreateUserUseCase:
 
         return user_entity
 
+
+class ListUsersUseCase:
+    def __init__(self, repository: UserRepository) -> None:
+        self.user_repository = repository
+
+    def execute(self) -> list[User]:
+        users_list = self.user_repository.list_all()
+
+        return users_list

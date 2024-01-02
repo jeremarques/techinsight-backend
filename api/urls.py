@@ -1,9 +1,6 @@
 from django.urls import path
-from django.shortcuts import HttpResponse
-
-def hello(request):
-    return HttpResponse('hello')
+from api.views.user_view import UserView
 
 urlpatterns = [
-    path('', hello)
+    path('users/', UserView.as_view())
 ]
