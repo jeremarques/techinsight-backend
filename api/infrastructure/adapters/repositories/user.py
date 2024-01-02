@@ -1,6 +1,6 @@
 from api.domain.entities.user import User as UserEntity
 from api.models import User as UserModel
-from api.domain.errors import NotFoundException
+from api.errors import NotFoundException
 
 class UserRepository:
     def save(self, user: UserEntity) -> UserEntity:

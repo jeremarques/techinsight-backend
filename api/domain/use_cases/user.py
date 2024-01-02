@@ -1,6 +1,6 @@
 from api.domain.entities.user import User as UserEntity
 from api.infrastructure.adapters.repositories.user import UserRepository
-from api.domain.errors import NotFoundException
+from api.errors import NotFoundException
 
 class CreateUserUseCase:
     def __init__(self, repository: UserRepository) -> None:

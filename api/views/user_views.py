@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from api.domain.use_cases.user import GetUserUseCase, CreateUserUseCase, UpdateUserUseCase
 from api.infrastructure.adapters.repositories.user import UserRepository
 from api.infrastructure.adapters.serializers.user_serializers import PublicUserReadSerializer, PublicUserCreateSerializer, PublicUserEditSerializer
-from api.domain.errors import NotFoundException
+from api.errors import NotFoundException
 
 class GetAndUpdateCurrentUserView(APIView):
     
