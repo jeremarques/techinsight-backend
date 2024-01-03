@@ -30,11 +30,10 @@ class GetUserUseCase:
         self.user_repository = repository
 
     def execute(self, username: str) -> UserEntity:
-        try:
-            user = self.user_repository.get(username)
-
-        except NotFoundException as err:
-            raise err
+        if not self.user_repository.exists_by_username(username):
+            raise NotFoundException(f'O usuário {username} não foi encontrado.')
+        
+        user = self.user_repository.get(username)
 
         return user
 
@@ -44,10 +43,9 @@ class UpdateUserUseCase:
         self.user_repository = repository
 
     def execute(self, id: int, username: str, email: str, full_name: str) -> UserEntity:
-        try:
-            updated_user = self.user_repository.update(id, username, email, full_name)
+        if not self.user_repository.exists_by_id(id):
+            raise NotFoundException(f'O usuário com id {id} não foi encontrado.')
         
-        except NotFoundException as err:
-            raise err
+        updated_user = self.user_repository.update(id, username, email, full_name)
         
         return updated_user

@@ -3,7 +3,6 @@ from datetime import datetime
 
 from api.domain.entities.user import User
 from api.domain.entities.user_profile import UserProfile
-from api.domain.entities.user_profile import UserProfile
 from api.domain.use_cases.user import CreateUserUseCase, GetUserUseCase, UpdateUserUseCase
 
 class MockRepository:
@@ -54,6 +53,17 @@ class MockRepository:
             is_active=True,
             created_at=datetime(2024, 1, 1, 15, 32, 46, 428775)
         )
+
+    def exists_by_id(self, id: int):
+        self.called_times += 1
+        
+        return True
+    
+    def exists_by_username(self, id: int):
+        self.called_times += 1
+        
+        return True
+
     
 
 class MockRepositoryProfile:
@@ -107,7 +117,7 @@ class TestUserUseCases(unittest.TestCase):
         self.assertEqual(result.is_superuser, False)
         self.assertEqual(result.is_active, True)
         self.assertEqual(result.created_at, datetime(2024, 1, 1, 15, 32, 46, 428775))
-        self.assertEqual(mock_repositorie.called_times, 1)
+        self.assertEqual(mock_repositorie.called_times, 2)
 
     def test_should_return_updated_user(self):
         mock_repositorie = MockRepository()
@@ -124,4 +134,4 @@ class TestUserUseCases(unittest.TestCase):
         self.assertEqual(result.is_superuser, False)
         self.assertEqual(result.is_active, True)
         self.assertEqual(result.created_at, datetime(2024, 1, 1, 15, 32, 46, 428775))
-        self.assertEqual(mock_repositorie.called_times, 1)
+        self.assertEqual(mock_repositorie.called_times, 2)

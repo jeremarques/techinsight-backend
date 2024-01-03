@@ -1,6 +1,5 @@
 from api.domain.entities.user import User as UserEntity
 from api.models.user import User as UserModel
-from api.errors import NotFoundException
 
 class UserRepository:
     def save(self, user: UserEntity) -> UserEntity:
@@ -12,20 +11,13 @@ class UserRepository:
         return user_entity
     
     def get(self, username: str) -> UserEntity:
-        try:
-            user_model = UserModel.objects.get(username=username)
-            user_entity = user_model.to_entity()
-
-        except UserModel.DoesNotExist as err:
-            raise NotFoundException(f'O usuário {username} não foi encontrado.')
+        user_model = UserModel.objects.get(username=username)
+        user_entity = user_model.to_entity()
 
         return user_entity
     
     def update(self, id: int, username: str, email: str, full_name: str) -> UserEntity:
         user_model = UserModel.objects.filter(id=id)
-
-        if not user_model.exists():
-            raise NotFoundException(f'O usuário com id {id} não foi encontrado.')
 
         user_model.update(
             username=username,
@@ -35,3 +27,19 @@ class UserRepository:
         updated_user_entity = self.get(username)
 
         return updated_user_entity
+
+    def exists_by_id(self, user_id: int) -> bool:
+        user = UserModel.objects.filter(id=user_id)
+
+        if user.exists():
+            return True
+        else:
+            return False
+        
+    def exists_by_username(self, username: int) -> bool:
+        user = UserModel.objects.filter(username=username)
+
+        if user.exists():
+            return True
+        else:
+            return False

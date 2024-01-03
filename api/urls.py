@@ -1,13 +1,14 @@
 from django.urls import path
 from api.views.user_views import GetAndUpdateCurrentUserView, CreateUserView, GetUserView
 from api.views.user_profile_views import GetAndUpdateCurrentUserProfileView, GetUserProfileView
+from api.views.relationship_views import CreateFollowView, DeleteFollowView
 
 urlpatterns = [
     path('users/register/', CreateUserView.as_view()), # work
     path('users/<str:username>/', GetUserView.as_view()), # work
     path('users/<int:user_id>/profile/', GetUserProfileView.as_view()), # work
-    # path('users/<int:user_id>/follow/'),
-    # path('users/<int:user_id>/unfollow/'),
+    path('users/<int:user_id>/follow/', CreateFollowView.as_view()),
+    path('users/<int:user_id>/unfollow/', DeleteFollowView.as_view()),
     # path('users/profiles/<int:profile_id>/posts'),
     path('me/', GetAndUpdateCurrentUserView.as_view()), # work
     path('me/profile/', GetAndUpdateCurrentUserProfileView.as_view()), # work
@@ -17,4 +18,5 @@ urlpatterns = [
     # path('posts/<uuid:post_id>/comments/'),
     # path('posts/<uuid:post_id>/comments/<int:comment_id>/'),
     # path('tags/<slug:tag_slug>/'),
+    # path('tags/<slug:tag_slug>/posts/'),
 ]
