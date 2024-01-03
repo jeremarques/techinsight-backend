@@ -3,7 +3,7 @@ from datetime import datetime
 
 from api.domain.entities.user import User
 
-class TestUserDomainUnit(unittest.TestCase):
+class TestUserEntitieUnit(unittest.TestCase):
 
     def test_constructor(self):
         user = User('jeremias', 'email@email.com', 'password123', created_at=datetime(2024, 1, 1, 15, 32, 46, 428775))

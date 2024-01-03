@@ -25,12 +25,12 @@ class GetUserUseCase:
 
     def execute(self, username: str) -> UserEntity:
         try:
-            users_list = self.user_repository.get(username)
+            user = self.user_repository.get(username)
 
         except NotFoundException as err:
             raise err
 
-        return users_list
+        return user
 
 
 class UpdateUserUseCase:

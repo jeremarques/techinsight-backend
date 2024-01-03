@@ -1,5 +1,5 @@
 from api.domain.entities.user import User as UserEntity
-from api.models import User as UserModel
+from api.models.user import User as UserModel
 from api.errors import NotFoundException
 
 class UserRepository:

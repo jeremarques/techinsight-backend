@@ -2,13 +2,11 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
-from api.models import User
+from api.models.user import User
 
 class PublicUserReadSerializer(serializers.ModelSerializer):
 
     is_active = serializers.ReadOnlyField()
-    is_staff = serializers.ReadOnlyField()
-    is_superuser = serializers.ReadOnlyField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
 
     class Meta:
@@ -19,8 +17,6 @@ class PublicUserReadSerializer(serializers.ModelSerializer):
             'email',
             'full_name',
             'is_active',
-            'is_staff',
-            'is_superuser',
             'created_at',
         )
 

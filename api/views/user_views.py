@@ -52,8 +52,9 @@ class GetAndUpdateCurrentUserView(APIView):
                 email=request.data.get('email'),
                 full_name=request.data.get('full_name')
             )
+            
         except NotFoundException as err:
-            return Response({'error': str(err)}, status=status.HTTP_404_NOT_FOUND)
+            return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
         
         updated_user_serialized = PublicUserReadSerializer(updated_user)
         body = updated_user_serialized.data
@@ -81,3 +82,20 @@ class CreateUserView(APIView):
 
         return Response(body, status=status.HTTP_201_CREATED)
     
+
+class GetUserView(APIView):
+
+    def get(self, request: Dict[str, Any], *args, **kwargs):
+        username = kwargs.get('username')
+        use_case = GetUserUseCase(UserRepository())
+        
+        try:
+            user = use_case.execute(username)
+
+        except NotFoundException as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
+        
+        user_serialized = PublicUserReadSerializer(user)
+        body = user_serialized.data
+
+        return Response(body, status=status.HTTP_200_OK)
