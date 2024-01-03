@@ -4,7 +4,7 @@ from django.contrib.auth.password_validation import validate_password
 
 from api.models.user import User
 
-class PublicUserReadSerializer(serializers.ModelSerializer):
+class UserReadSerializer(serializers.ModelSerializer):
 
     is_active = serializers.ReadOnlyField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
@@ -21,7 +21,7 @@ class PublicUserReadSerializer(serializers.ModelSerializer):
         )
 
 
-class PublicUserCreateSerializer(serializers.Serializer):
+class UserCreateSerializer(serializers.Serializer):
     username = serializers.CharField(
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
@@ -44,7 +44,7 @@ class PublicUserCreateSerializer(serializers.Serializer):
         return attrs
 
 
-class PublicUserEditSerializer(serializers.Serializer):
+class UserEditSerializer(serializers.Serializer):
 
     new_username = serializers.CharField(required=True)
     username = serializers.CharField(required=True)

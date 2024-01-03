@@ -12,7 +12,7 @@ class UserProfile:
     website_url: Optional[str] = ''
     bio: Optional[str] = ''
     about: Optional[str] = ''
-    date_of_birth: Optional[date] = ''
+    date_of_birth: Optional[date] = None
     created_at: Optional[datetime] = field(default_factory=datetime.now)
     
     def __post_init__(self):

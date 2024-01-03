@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from api.models.profile import Profile
+from api.models.user_profile import UserProfile
 
 User = get_user_model()
 
@@ -38,4 +38,4 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 admin.site.register(User, UserAdmin)
-admin.site.register(Profile)
+admin.site.register(UserProfile)
