@@ -1,17 +1,17 @@
 from datetime import date
-from api.domain.entities.profile import Profile as ProfileEntity
+from api.domain.entities.user_profile import UserProfile as UserProfileEntity
 from api.models.profile import Profile as ProfileModel
 from api.errors import NotFoundException
 
 class ProfileRepository:
-    def save(self, profile: ProfileEntity) -> ProfileEntity:
+    def save(self, profile: UserProfileEntity) -> UserProfileEntity:
         profile_model = ProfileModel.from_entity(profile)
         profile_model.save()
         profile_entity = profile_model.to_entity()
 
         return profile_entity
     
-    def get(self, user_id: int) -> ProfileEntity:
+    def get(self, user_id: int) -> UserProfileEntity:
         try:
             profile_model = ProfileModel.objects.get(user=user_id)
             profile_entity = profile_model.to_entity()
@@ -21,7 +21,7 @@ class ProfileRepository:
 
         return profile_entity
 
-    def update(self, user_id: int, profile_photo: str, website_url: str, bio: str, about: str, date_of_birth: date) -> ProfileEntity:
+    def update(self, user_id: int, profile_photo: str, website_url: str, bio: str, about: str, date_of_birth: date) -> UserProfileEntity:
 
         profile_model = ProfileModel.objects.filter(user=user_id)
 

@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 import pytz
 
 @dataclass(frozen=True)
-class Profile:
+class UserProfile:
     user_id: int
     name: str
     id: Optional[int] = None

@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from api.domain.entities.profile import Profile as ProfileEntity
+from api.domain.entities.user_profile import UserProfile as UserProfileEntity
 from api.models.user import User
 
 class Profile(models.Model):
@@ -15,8 +15,8 @@ class Profile(models.Model):
     date_of_birth = models.DateField(blank=True)
     created_at = models.DateTimeField(_("date joined"), default=timezone.now)
 
-    def to_entity(self) -> ProfileEntity:
-        return ProfileEntity(
+    def to_entity(self) -> UserProfileEntity:
+        return UserProfileEntity(
             id=self.pk,
             user_id=self.user,
             profile_photo=self.profile_photo,
@@ -29,7 +29,7 @@ class Profile(models.Model):
         )
 
     @staticmethod
-    def from_entity(profile: ProfileEntity) -> "Profile":
+    def from_entity(profile: UserProfileEntity) -> "Profile":
         return User(
             user=profile.user_id,
             profile_photo=profile.profile_photo,

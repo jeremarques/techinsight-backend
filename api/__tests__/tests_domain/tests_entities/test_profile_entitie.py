@@ -1,12 +1,12 @@
 import unittest
 from datetime import datetime
 
-from api.domain.entities.profile import Profile
+from api.domain.entities.user_profile import UserProfile
 
 class TestProfileDomainUnit(unittest.TestCase):
 
     def test_constructor(self):
-        profile = Profile(
+        profile = UserProfile(
             1,
             'Jeremias Marques',
             1,
