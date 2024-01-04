@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from api.domain.use_cases.user_profile import GetUserProfileUseCase, UpdateUserProfileUseCase
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
-from api.infrastructure.adapters.serializers.user_profile_serializers import UserProfileSerializer
+from api.infrastructure.adapters.serializers.user_profile_serializers import UserProfileReadSerializer, UserProfileCreateSerializer
 from api.errors import NotFoundException
     
 
@@ -19,7 +19,7 @@ class GetUserProfileView(APIView):
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
         
-        current_user_profile_serialized = UserProfileSerializer(current_user_profile)
+        current_user_profile_serialized = UserProfileReadSerializer(current_user_profile)
         body = current_user_profile_serialized.data
 
         return Response(body, status=status.HTTP_200_OK)
@@ -37,7 +37,7 @@ class GetAndUpdateCurrentUserProfileView(APIView):
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
         
-        current_user_profile_serialized = UserProfileSerializer(current_user_profile)
+        current_user_profile_serialized = UserProfileReadSerializer(current_user_profile)
         body = current_user_profile_serialized.data
 
         return Response(body, status=status.HTTP_200_OK)
@@ -47,7 +47,7 @@ class GetAndUpdateCurrentUserProfileView(APIView):
         user_id = request.user.id
         use_case = UpdateUserProfileUseCase(UserProfileRepository())
 
-        validate_data = UserProfileSerializer(data=request.data)
+        validate_data = UserProfileCreateSerializer(data=request.data)
 
         if not validate_data.is_valid():
             return Response({ 'error': validate_data.errors }, status=status.HTTP_400_BAD_REQUEST)
@@ -66,7 +66,7 @@ class GetAndUpdateCurrentUserProfileView(APIView):
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
         
-        profile_updated_serialized = UserProfileSerializer(profile_updated_entity)
+        profile_updated_serialized = UserProfileReadSerializer(profile_updated_entity)
         body = profile_updated_serialized.data
 
         return Response(body, status=status.HTTP_200_OK)

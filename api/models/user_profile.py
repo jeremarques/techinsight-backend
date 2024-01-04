@@ -18,7 +18,7 @@ class UserProfile(models.Model):
     def to_entity(self) -> UserProfileEntity:
         return UserProfileEntity(
             id=self.pk,
-            user_id=self.user,
+            user=self.user.to_entity(),
             profile_photo=self.profile_photo,
             website_url=self.website,
             name=self.name,
@@ -31,7 +31,7 @@ class UserProfile(models.Model):
     @staticmethod
     def from_entity(profile: UserProfileEntity) -> "UserProfile":
         return UserProfile(
-            user_id=profile.user_id,
+            user_id=profile.user.id,
             profile_photo=profile.profile_photo,
             website=profile.website_url,
             name=profile.name,

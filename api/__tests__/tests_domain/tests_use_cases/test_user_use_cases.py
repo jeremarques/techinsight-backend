@@ -87,7 +87,7 @@ class MockRepositoryProfile:
         self.called_times += 1
         
         return UserProfile(
-            user_id=user_profile.user_id,
+            user=user_profile.user,
             name=user_profile.name
         )
     

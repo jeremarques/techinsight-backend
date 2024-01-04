@@ -12,8 +12,8 @@ class Relationship(models.Model):
 
     def to_entity(self) -> RelationshipEntity:
         return RelationshipEntity(
-            follower_id=self.follower.id,
-            followed_id=self.followed.id,
+            follower_id=self.follower.pk,
+            followed_id=self.followed.pk,
             created_at=self.created_at
         )
 

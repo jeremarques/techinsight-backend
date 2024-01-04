@@ -1,11 +1,12 @@
 from typing import Optional
 from datetime import datetime, date
 from dataclasses import dataclass, field
+from .user import User
 import pytz
 
 @dataclass(frozen=True)
-class UserProfile:
-    user_id: int
+class UserProfile():
+    user: User
     name: str
     id: Optional[int] = None
     profile_photo: Optional[str] = ''
@@ -25,7 +26,7 @@ class UserProfile:
     def to_dict(self):
         return {
             'id': self.id, 
-            'user_id': self.user_id,
+            'user_id': self.user.id,
             'profile_photo': self.profile_photo,
             'website_url': self.website_url,
             'name': self.name,

@@ -1,5 +1,6 @@
 from datetime import date
 from api.domain.entities.user_profile import UserProfile as UserProfileEntity
+from api.domain.entities.user import User as UserEntity
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
 from api.errors import NotFoundException
 
@@ -8,8 +9,8 @@ class CreateUserProfileUseCase:
     def __init__(self, repository: UserProfileRepository) -> None:
         self.repository = repository
 
-    def execute(self, user_id: int, name: str) -> UserProfileEntity:
-        user_profile = UserProfileEntity(user_id=user_id, name=name)
+    def execute(self, user: UserEntity, name: str) -> UserProfileEntity:
+        user_profile = UserProfileEntity(user=user, name=name)
         created_user_profile_entity = self.repository.save(user_profile)
 
         return created_user_profile_entity

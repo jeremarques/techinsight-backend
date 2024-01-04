@@ -32,7 +32,7 @@ class CreateUserUseCase:
         user_entity = self.user_repository.save(user)
 
         create_user_profile_use_case = CreateUserProfileUseCase(self.user_profile_repository)
-        created_user_profile = create_user_profile_use_case.execute(user_id=user_entity.id, name=user_entity.full_name)
+        created_user_profile = create_user_profile_use_case.execute(user=user_entity, name=user_entity.full_name)
 
         return user_entity
 

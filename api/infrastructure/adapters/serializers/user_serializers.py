@@ -22,6 +22,13 @@ class UserReadSerializer(serializers.ModelSerializer):
         )
 
 
+class UserPostReadSerializer(serializers.Serializer):
+
+    id = serializers.IntegerField()
+    username = serializers.CharField()
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+
+
 class UserCreateSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     email = serializers.EmailField(required=True)
