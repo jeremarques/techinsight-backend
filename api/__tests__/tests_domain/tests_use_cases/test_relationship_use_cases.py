@@ -1,5 +1,4 @@
 import unittest
-from datetime import datetime
 
 from api.domain.entities.relationship import Relationship
 from api.domain.use_cases.relationship import FollowUserUseCase, UnfollowUserUseCase
@@ -21,8 +20,11 @@ class RelationshipMockRepository:
 
     def is_following(self, follower_id: int, followed_id: int):
         self.called_times += 1
+
+        if follower_id == 1 and followed_id == 2:        
+            return False
         
-        return False
+        return True
     
 
 class RelationshipMockRepository2:
@@ -82,8 +84,8 @@ class TestRelationshipUseCases(unittest.TestCase):
         use_case = UnfollowUserUseCase(relationship_mock_repositorie)
 
         relationship_data = {
-            "follower_id": 1,
-            "followed_id": 2
+            "follower_id": 2,
+            "followed_id": 4
         }
 
         result = use_case.execute(**relationship_data)
