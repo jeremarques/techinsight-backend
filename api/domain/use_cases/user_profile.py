@@ -20,10 +20,11 @@ class GetUserProfileUseCase:
         self.repository = repository
 
     def execute(self, user_id: int) -> UserProfileEntity:
-        if not self.repository.exists(user_id):
-            raise NotFoundException(f'O perfil do usuário {user_id} não foi encontrado.')
+        try:
+            user_profile_entity = self.repository.get(user_id)
         
-        user_profile_entity = self.repository.get(user_id)
+        except NotFoundException as err:
+            raise err
         
         return user_profile_entity
     

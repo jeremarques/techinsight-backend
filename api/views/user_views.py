@@ -6,7 +6,7 @@ from api.domain.use_cases.user import GetUserUseCase, CreateUserUseCase, UpdateU
 from api.infrastructure.adapters.repositories.user import UserRepository
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
 from api.infrastructure.adapters.serializers.user_serializers import UserReadSerializer, UserCreateSerializer, UserEditSerializer
-from api.errors import NotFoundException
+from api.errors import NotFoundException, AlreadyExistsException, UsernameAlreadyExistsException, EmailAlreadyExistsException
 
 class GetAndUpdateCurrentUserView(APIView):
     
@@ -57,6 +57,19 @@ class GetAndUpdateCurrentUserView(APIView):
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
         
+        except AlreadyExistsException as err:
+            return Response({
+                'username': ['O nome de usuário já existe.'],
+                'email': ['O e-mail já existe.']
+            }, status=status.HTTP_400_BAD_REQUEST)        
+        
+        except UsernameAlreadyExistsException as err:
+            return Response({ 'username': str(err) }, status=status.HTTP_400_BAD_REQUEST)
+        
+        except EmailAlreadyExistsException as err:
+            return Response({ 'email': str(err) }, status=status.HTTP_400_BAD_REQUEST)
+        
+        
         updated_user_serialized = UserReadSerializer(updated_user)
         body = updated_user_serialized.data
 
@@ -72,12 +85,26 @@ class CreateUserView(APIView):
         if not data.is_valid():
             return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        user = use_case.execute(
-            username=request.data.get('username'),
-            password=request.data.get('password'),
-            email=request.data.get('email'),
-            full_name=request.data.get('full_name')
-        )
+        try:
+            user = use_case.execute(
+                username=request.data.get('username'),
+                password=request.data.get('password'),
+                email=request.data.get('email'),
+                full_name=request.data.get('full_name')
+            )
+
+        except AlreadyExistsException as err:
+            return Response({
+                'username': ['O nome de usuário já existe.'],
+                'email': ['O e-mail já existe.']
+            }, status=status.HTTP_400_BAD_REQUEST)        
+        
+        except UsernameAlreadyExistsException as err:
+            return Response({ 'username': str(err) }, status=status.HTTP_400_BAD_REQUEST)
+        
+        except EmailAlreadyExistsException as err:
+            return Response({ 'email': str(err) }, status=status.HTTP_400_BAD_REQUEST)
+
         user_serialized = UserReadSerializer(user)
         body = user_serialized.data
 

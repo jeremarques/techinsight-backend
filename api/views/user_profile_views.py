@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from api.domain.use_cases.user_profile import GetUserProfileUseCase, UpdateUserProfileUseCase
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
-from api.infrastructure.adapters.serializers.user_profile_serializers import UserProfileSerializer, UserProfileCreateSerializer
+from api.infrastructure.adapters.serializers.user_profile_serializers import UserProfileSerializer
 from api.errors import NotFoundException
     
 
@@ -47,19 +47,20 @@ class GetAndUpdateCurrentUserProfileView(APIView):
         user_id = request.user.id
         use_case = UpdateUserProfileUseCase(UserProfileRepository())
 
-        data = UserProfileCreateSerializer(data=request.data)
-        if not data.is_valid():
-            return Response({ 'error': data.errors }, status=status.HTTP_400_BAD_REQUEST)
+        validate_data = UserProfileSerializer(data=request.data)
+
+        if not validate_data.is_valid():
+            return Response({ 'error': validate_data.errors }, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             profile_updated_entity = use_case.execute(
                 user_id,
-                data.validated_data.get('name'),
-                data.validated_data.get('profile_photo'),
-                data.validated_data.get('website_url'),
-                data.validated_data.get('bio'),
-                data.validated_data.get('about'),
-                data.validated_data.get('date_of_birth')
+                validate_data.validated_data.get('name'),
+                validate_data.validated_data.get('profile_photo'),
+                validate_data.validated_data.get('website_url'),
+                validate_data.validated_data.get('bio'),
+                validate_data.validated_data.get('about'),
+                validate_data.validated_data.get('date_of_birth')
             )
 
         except NotFoundException as err:

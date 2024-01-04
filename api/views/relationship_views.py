@@ -16,6 +16,7 @@ class CreateFollowView(APIView):
         followed_id = int(kwargs.get("user_id"))
 
         use_case = FollowUserUseCase(RelationshipRepository(), UserRepository())
+        
         try:
             follow_entity = use_case.execute(follower_id, followed_id)
         

@@ -1,6 +1,7 @@
 from datetime import date
 from api.domain.entities.user_profile import UserProfile as UserProfileEntity
 from api.models.user_profile import UserProfile as UserProfileModel
+from api.errors import NotFoundException
 
 class UserProfileRepository:
     def save(self, profile: UserProfileEntity) -> UserProfileEntity:
@@ -11,7 +12,12 @@ class UserProfileRepository:
         return profile_entity
     
     def get(self, user_id: int) -> UserProfileEntity:
-        profile_model = UserProfileModel.objects.get(user=user_id)
+        try:
+            profile_model = UserProfileModel.objects.get(user=user_id)
+
+        except UserProfileModel.DoesNotExist as err:
+            raise NotFoundException(f'O perfil do usuário {user_id} não foi encontrado.')
+
         profile_entity = profile_model.to_entity()
 
         return profile_entity

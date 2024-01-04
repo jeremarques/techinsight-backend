@@ -11,16 +11,13 @@ class FollowUserUseCase:
 
     def execute(self, follower_id: int, followed_id: int) -> Relationship:
 
-        if not self.user_repository.exists_by_id(followed_id):
+        if not self.user_repository.exists(followed_id):
             raise NotFoundException('O usuário que você deseja seguir não foi encontrado.')
         
-        if self.relationship_repository.is_following(follower_id=follower_id, followed_id=followed_id):
+        if self.relationship_repository.is_following(follower_id, followed_id):
             raise AlreadyExistsException('Você já está seguindo este usuário')
         
-        relationship_entity = Relationship(
-            follower_id=follower_id,
-            followed_id=followed_id
-        )
+        relationship_entity = Relationship(follower_id, followed_id)
         created_relationship_entity = self.relationship_repository.save(relationship_entity)
 
         return created_relationship_entity
@@ -32,9 +29,9 @@ class UnfollowUserUseCase:
 
     def execute(self, follower_id: int, followed_id: int) -> None:
         
-        if not self.relationship_repository.is_following(follower_id=follower_id, followed_id=followed_id):
+        if not self.relationship_repository.is_following(follower_id, followed_id):
             raise NotFoundException('Você não segue este usuário')
 
-        self.relationship_repository.delete(follower_id=follower_id, followed_id=followed_id)
+        self.relationship_repository.delete(follower_id, followed_id)
 
         return None

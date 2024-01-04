@@ -1,5 +1,6 @@
 from api.domain.entities.user import User as UserEntity
 from api.models.user import User as UserModel
+from api.errors import NotFoundException
 
 class UserRepository:
     def save(self, user: UserEntity) -> UserEntity:
@@ -11,7 +12,12 @@ class UserRepository:
         return user_entity
     
     def get(self, username: str) -> UserEntity:
-        user_model = UserModel.objects.get(username=username)
+        try:
+            user_model = UserModel.objects.get(username=username)
+
+        except UserModel.DoesNotExist as err:
+            raise NotFoundException(f'O usuário {username} não foi encontrado.')
+        
         user_entity = user_model.to_entity()
 
         return user_entity
@@ -28,7 +34,7 @@ class UserRepository:
 
         return updated_user_entity
 
-    def exists_by_id(self, user_id: int) -> bool:
+    def exists(self, user_id: int) -> bool:
         user = UserModel.objects.filter(id=user_id)
 
         if user.exists():
@@ -36,10 +42,36 @@ class UserRepository:
         else:
             return False
         
-    def exists_by_username(self, username: int) -> bool:
+    def exists_username(self, username: str):
         user = UserModel.objects.filter(username=username)
 
         if user.exists():
             return True
         else:
             return False
+    
+    def exists_email(self, email: str):
+        user = UserModel.objects.filter(email=email)
+
+        if user.exists():
+            return True
+        else:
+            return False
+        
+    def exists_username_but_not_mine(self, user_id: int, username: str):
+        user = UserModel.objects.filter(username=username).exclude(id=user_id)
+
+        if user.exists():
+            return True
+        else:
+            return False
+    
+    def exists_email_but_not_mine(self, user_id: int, email: str):
+        user = UserModel.objects.filter(email=email).exclude(id=user_id)
+
+        if user.exists():
+            return True
+        else:
+            return False
+        
+

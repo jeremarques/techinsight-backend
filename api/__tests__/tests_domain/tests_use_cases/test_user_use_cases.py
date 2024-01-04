@@ -54,16 +54,30 @@ class MockRepository:
             created_at=datetime(2024, 1, 1, 15, 32, 46, 428775)
         )
 
-    def exists_by_id(self, id: int):
-        self.called_times += 1
-        
-        return True
-    
-    def exists_by_username(self, id: int):
+    def exists(self, id: int):
         self.called_times += 1
         
         return True
 
+    def exists_username(self, username: str):
+        self.called_times += 1
+        
+        return False
+    
+    def exists_email(self, email: str):
+        self.called_times += 1
+        
+        return False
+    
+    def exists_username_but_not_mine(self, id: int, username: str):
+        self.called_times += 1
+        
+        return False
+    
+    def exists_email_but_not_mine(self, id: int, email: str):
+        self.called_times += 1
+        
+        return False
     
 
 class MockRepositoryProfile:
@@ -80,8 +94,8 @@ class MockRepositoryProfile:
 
 class TestUserUseCases(unittest.TestCase):
     def test_should_create_normal_user(self):
-        mock_repositorie = MockRepository()
-        mock_repositorie_profile = MockRepositoryProfile()
+        mock_repository = MockRepository()
+        mock_repository_profile = MockRepositoryProfile()
 
         user = {
             'username': 'jeremias',
@@ -90,7 +104,7 @@ class TestUserUseCases(unittest.TestCase):
             'full_name': 'Jeremias Marques'
         }
 
-        use_case = CreateUserUseCase(mock_repositorie, mock_repositorie_profile)
+        use_case = CreateUserUseCase(mock_repository, mock_repository_profile)
         result = use_case.execute(**user)
 
         self.assertEqual(result.username, 'jeremias')
@@ -100,13 +114,13 @@ class TestUserUseCases(unittest.TestCase):
         self.assertEqual(result.is_staff, False)
         self.assertEqual(result.is_superuser, False)
         self.assertEqual(result.is_active, True)
-        self.assertEqual(mock_repositorie.called_times, 1)
+        self.assertEqual(mock_repository.called_times, 3)
         
 
     def test_should_return_user(self):
-        mock_repositorie = MockRepository()
+        mock_repository = MockRepository()
 
-        use_case = GetUserUseCase(mock_repositorie)
+        use_case = GetUserUseCase(mock_repository)
         result = use_case.execute('jeremias')
 
         self.assertEqual(result.username, 'jeremias')
@@ -117,12 +131,12 @@ class TestUserUseCases(unittest.TestCase):
         self.assertEqual(result.is_superuser, False)
         self.assertEqual(result.is_active, True)
         self.assertEqual(result.created_at, datetime(2024, 1, 1, 15, 32, 46, 428775))
-        self.assertEqual(mock_repositorie.called_times, 2)
+        self.assertEqual(mock_repository.called_times, 1)
 
     def test_should_return_updated_user(self):
-        mock_repositorie = MockRepository()
+        mock_repository = MockRepository()
 
-        use_case = UpdateUserUseCase(mock_repositorie)
+        use_case = UpdateUserUseCase(mock_repository)
         result = use_case.execute(1, 'jeremias', 'email@email.com', 'Jeremias Marques')
 
         self.assertEqual(result.id, 1)
@@ -134,4 +148,4 @@ class TestUserUseCases(unittest.TestCase):
         self.assertEqual(result.is_superuser, False)
         self.assertEqual(result.is_active, True)
         self.assertEqual(result.created_at, datetime(2024, 1, 1, 15, 32, 46, 428775))
-        self.assertEqual(mock_repositorie.called_times, 2)
+        self.assertEqual(mock_repository.called_times, 4)

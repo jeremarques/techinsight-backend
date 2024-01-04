@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.utils.text import slugify
 
 from api.domain.entities.post_tag import PostTag as PostTagEntity
 
@@ -21,7 +20,7 @@ class PostTag(models.Model):
     def from_entity(post_tag: PostTagEntity) -> "PostTag":
         return PostTag(
             name=post_tag.name,
-            slug=slugify(post_tag.slug),
+            slug=post_tag.slug,
             created_at=post_tag.created_at
         )
 

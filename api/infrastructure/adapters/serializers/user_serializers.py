@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
+from api.validators import validate_username
 
 from api.models.user import User
 
@@ -22,22 +23,16 @@ class UserReadSerializer(serializers.ModelSerializer):
 
 
 class UserCreateSerializer(serializers.Serializer):
-    username = serializers.CharField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
-
-    email = serializers.EmailField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
-
+    username = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
     full_name = serializers.CharField(required=True)
-
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     confirm_password = serializers.CharField(write_only=True, required=True)
 
     def validate(self, attrs):
+        if not validate_username(attrs.get('username')):
+            raise serializers.ValidationError({"username": "O nome de usuário deve conter apenas letras, números, '_' e '.'"})
+
         if attrs.get('password') != attrs.get('confirm_password'):
             raise serializers.ValidationError({"password": "As senhas devem ser iguais."})
 
@@ -51,15 +46,3 @@ class UserEditSerializer(serializers.Serializer):
     email = serializers.CharField(required=True)
     full_name = serializers.CharField(required=True)
 
-    def validate(self, attrs):
-        new_username = attrs.get('new_username')
-        current_username = attrs.get('username')
-        email = attrs.get('email')
-
-        if new_username and User.objects.filter(username=new_username).exclude(username=current_username).exists():
-            raise serializers.ValidationError({"new_username": "Este username já está em uso."})
-
-        if email and User.objects.filter(email=email).exclude(username=current_username).exists():
-            raise serializers.ValidationError({"email": "Este email já está em uso."})
-
-        return attrs
