@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 
 class NotFoundException(Exception):
     """Raises an exception when a requested resource is not found."""

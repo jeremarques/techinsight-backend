@@ -12,6 +12,7 @@ class PostTag(models.Model):
 
     def to_entity(self) -> PostTagEntity:
         return PostTagEntity(
+            id=self.pk,
             name=self.name,
             slug=self.slug,
             created_at=self.created_at,

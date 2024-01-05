@@ -29,17 +29,17 @@ class PostTagMockRepository:
         return False
 
 
-class TestRelationshipUseCases(unittest.TestCase):
+class TestPostTagUseCases(unittest.TestCase):
     def test_create_post_tag(self):
         post_tag_mock_repository = PostTagMockRepository()
 
-        relationship_data = {
+        post_tag_data = {
             'name': 'Test tag',
             'slug': 'test-tag'
         }
 
         use_case = CreatePostTagUseCase(post_tag_mock_repository)
-        result = use_case.execute(**relationship_data)
+        result = use_case.execute(**post_tag_data)
 
 
         self.assertEqual(result.name, 'Test tag')

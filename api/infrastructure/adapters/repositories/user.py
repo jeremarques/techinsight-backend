@@ -42,44 +42,19 @@ class UserRepository:
 
         return updated_user_entity
 
-    def exists(self, user_id: int) -> bool:
-        user = UserModel.objects.filter(id=user_id)
+    def exists(self, *args, **kwargs) -> bool:
+        user = UserModel.objects.filter(*args, **kwargs)
 
         if user.exists():
             return True
         else:
             return False
         
-    def exists_username(self, username: str):
-        user = UserModel.objects.filter(username=username)
-
-        if user.exists():
-            return True
-        else:
-            return False
-    
-    def exists_email(self, email: str):
-        user = UserModel.objects.filter(email=email)
+    def exists_but_not_mine(self, user_id: int, *args, **kwargs):
+        user = UserModel.objects.filter(**kwargs).exclude(id=user_id)
 
         if user.exists():
             return True
         else:
             return False
         
-    def exists_username_but_not_mine(self, user_id: int, username: str):
-        user = UserModel.objects.filter(username=username).exclude(id=user_id)
-
-        if user.exists():
-            return True
-        else:
-            return False
-    
-    def exists_email_but_not_mine(self, user_id: int, email: str):
-        user = UserModel.objects.filter(email=email).exclude(id=user_id)
-
-        if user.exists():
-            return True
-        else:
-            return False
-        
-

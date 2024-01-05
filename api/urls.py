@@ -3,6 +3,7 @@ from api.views.user_views import GetAndUpdateCurrentUserView, CreateUserView, Ge
 from api.views.user_profile_views import GetAndUpdateCurrentUserProfileView, GetUserProfileView
 from api.views.relationship_views import CreateFollowView, DeleteFollowView
 from api.views.post_tag_views import CreatePostTagView, GetPostTagView
+from api.views.post_views import GetAndCreateCurrentUserPostView, GetPostView
 
 urlpatterns = [
     path('users/register/', CreateUserView.as_view()), # work
@@ -13,8 +14,8 @@ urlpatterns = [
     # path('users/profiles/<int:profile_id>/posts'),
     path('me/', GetAndUpdateCurrentUserView.as_view()), # work
     path('me/profile/', GetAndUpdateCurrentUserProfileView.as_view()), # work
-    # path('me/profile/posts/'),
-    # path('posts/<uuid:post_id>/'),
+    path('me/posts/', GetAndCreateCurrentUserPostView.as_view()), # work
+    path('posts/<str:public_id>/', GetPostView.as_view()), # work
     # path('posts/<uuid:post_id>/like/'),
     # path('posts/<uuid:post_id>/comments/'),
     # path('posts/<uuid:post_id>/comments/<int:comment_id>/'),

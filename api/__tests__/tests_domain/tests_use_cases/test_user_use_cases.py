@@ -54,27 +54,18 @@ class MockRepository:
             created_at=datetime(2024, 1, 1, 15, 32, 46, 428775)
         )
 
-    def exists(self, id: int):
+    def exists(self, *args, **kwargs):
         self.called_times += 1
+
+        if kwargs.get('username') == 'jeremias':
+            return False
+        
+        if kwargs.get('email') == 'jeremias@gmail.com':
+            return False
         
         return True
-
-    def exists_username(self, username: str):
-        self.called_times += 1
-        
-        return False
     
-    def exists_email(self, email: str):
-        self.called_times += 1
-        
-        return False
-    
-    def exists_username_but_not_mine(self, id: int, username: str):
-        self.called_times += 1
-        
-        return False
-    
-    def exists_email_but_not_mine(self, id: int, email: str):
+    def exists_but_not_mine(self, id: int, *args, **kwargs):
         self.called_times += 1
         
         return False

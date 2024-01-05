@@ -7,6 +7,7 @@ import pytz
 class PostTag:
     name: str
     slug: str
+    id: Optional[int] = None
     created_at: Optional[datetime] = field(default_factory=datetime.now)
     updated_at: Optional[datetime] = None
     
@@ -19,6 +20,7 @@ class PostTag:
 
     def to_dict(self):
         return {
+            'id': self.id,
             'name': self.name, 
             'slug': self.slug,
             'created_at': self.created_at,

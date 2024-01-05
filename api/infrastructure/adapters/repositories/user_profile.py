@@ -16,12 +16,12 @@ class UserProfileRepository:
 
         return profile_entity
     
-    def get(self, user_id: int) -> UserProfileEntity:
+    def get(self, *args, **kwargs) -> UserProfileEntity:
         try:
-            profile_model = UserProfileModel.objects.get(user=user_id)
+            profile_model = UserProfileModel.objects.get(*args, **kwargs)
 
         except UserProfileModel.DoesNotExist as err:
-            raise NotFoundException(f'O perfil do usuário {user_id} não foi encontrado.')
+            raise NotFoundException
 
         profile_entity = profile_model.to_entity()
 
@@ -44,8 +44,8 @@ class UserProfileRepository:
 
         return profile_updated_entity
         
-    def exists(self, user_id: int) -> bool:
-        profile = UserProfileModel.objects.filter(user_id=user_id)
+    def exists(self, *args, **kwargs) -> bool:
+        profile = UserProfileModel.objects.filter(*args, **kwargs)
 
         if profile.exists():
             return True

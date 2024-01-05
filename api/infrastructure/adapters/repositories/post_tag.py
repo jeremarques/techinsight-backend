@@ -16,13 +16,13 @@ class PostTagRepository:
 
         return post_tag_entity
     
-    def get(self, tag_slug: str) -> PostTagEntity:
+    def get(self, *args, **kwargs) -> PostTagEntity:
         try:
-            post_tag_model = PostTagModel.objects.get(slug=tag_slug)
+            post_tag_model = PostTagModel.objects.get(**kwargs)
 
         except PostTagModel.DoesNotExist as err:
-            raise NotFoundException(f'A tag {tag_slug} não foi encontrada.')
-
+            raise NotFoundException
+        
         post_tag_entity = post_tag_model.to_entity()
 
         return post_tag_entity
@@ -33,8 +33,8 @@ class PostTagRepository:
 
         return None
     
-    def exists(self, slug: str):
-        post_tag = PostTagModel.objects.filter(slug=slug)
+    def exists(self, *args, **kwargs):
+        post_tag = PostTagModel.objects.filter(**kwargs)
 
         if post_tag.exists():
             return True

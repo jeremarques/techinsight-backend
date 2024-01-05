@@ -10,8 +10,8 @@ class CreateUserUseCase:
         self.user_profile_repository = user_profile_repository
 
     def execute(self, username: str, password: str, email: str, full_name: str) -> UserEntity:
-        exists_username = self.user_repository.exists_username(username)
-        exists_email = self.user_repository.exists_email(email)
+        exists_username = self.user_repository.exists(username=username)
+        exists_email = self.user_repository.exists(email=email)
         
         if exists_username and exists_email:
             raise AlreadyExistsException(f'Este nome de usuário e e-mail já existem.')
@@ -59,8 +59,8 @@ class UpdateUserUseCase:
         if not self.user_repository.exists(id):
             raise NotFoundException(f'O usuário com id {id} não foi encontrado.')
         
-        exists_username = self.user_repository.exists_username_but_not_mine(id, username)
-        exists_email = self.user_repository.exists_email_but_not_mine(id, email)
+        exists_username = self.user_repository.exists_but_not_mine(id, username=username)
+        exists_email = self.user_repository.exists_but_not_mine(id, email=email)
         
         if exists_username and exists_email:
             raise AlreadyExistsException(f'Este nome de usuário e e-mail já existem.')
