@@ -49,7 +49,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             "Unselect this instead of deleting accounts."
         ),
     )
-    created_at = models.DateTimeField(_("date joined"), default=timezone.now)
+    created_at = models.DateTimeField(_("date joined"), default=timezone.now, editable=False)
+    updated_at = models.DateTimeField("Data de atualização", null=True, editable=False)
 
     groups = models.ManyToManyField(
         Group,
@@ -100,7 +101,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             is_staff=self.is_staff,
             is_superuser=self.is_superuser,
             is_active=self.is_active,
-            created_at=self.created_at
+            created_at=self.created_at,
+            updated_at=self.updated_at
         )
 
     @staticmethod
@@ -113,7 +115,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             is_staff=user.is_staff,
             is_superuser=user.is_superuser,
             is_active=user.is_active,
-            created_at=user.created_at
+            created_at=user.created_at,
+            updated_at=user.updated_at
         )
     
     class Meta:

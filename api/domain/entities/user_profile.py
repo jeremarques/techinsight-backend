@@ -15,6 +15,7 @@ class UserProfile():
     about: Optional[str] = ''
     date_of_birth: Optional[date] = None
     created_at: Optional[datetime] = field(default_factory=datetime.now)
+    updated_at: Optional[datetime] = None
     
     def __post_init__(self):
         dt_now = datetime.now(pytz.timezone('America/Sao_Paulo'))
@@ -33,5 +34,6 @@ class UserProfile():
             'bio': self.bio,
             'about': self.about,
             'date_of_birth': self.date_of_birth,
-            'created_at': self.created_at
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
         }

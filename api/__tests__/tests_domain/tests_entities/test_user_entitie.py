@@ -16,6 +16,7 @@ class TestUserEntitieUnit(unittest.TestCase):
         self.assertFalse(user.is_staff)
         self.assertFalse(user.is_superuser)
         self.assertEqual(user.created_at, datetime(2024, 1, 1, 15, 32, 46, 428775))
+        self.assertIsNone(user.updated_at)
 
     def test_deactivate_and_activate(self):
         user = User('jeremias', 'email@email.com', 'password123')

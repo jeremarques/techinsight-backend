@@ -8,6 +8,7 @@ class PostTag:
     name: str
     slug: str
     created_at: Optional[datetime] = field(default_factory=datetime.now)
+    updated_at: Optional[datetime] = None
     
     def __post_init__(self):
         dt_now = datetime.now(pytz.timezone('America/Sao_Paulo'))
@@ -20,5 +21,6 @@ class PostTag:
         return {
             'name': self.name, 
             'slug': self.slug,
-            'created_at': self.created_at
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
         }

@@ -26,4 +26,5 @@ class TestProfileDomainUnit(unittest.TestCase):
         self.assertEqual(profile.bio, 'my bio')
         self.assertEqual(profile.about, 'about')
         self.assertEqual(profile.created_at, datetime(2024, 1, 1, 15, 32, 46, 428775))
+        self.assertIsNone(profile.updated_at)
 

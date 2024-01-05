@@ -1,8 +1,14 @@
+import pytz
+from datetime import datetime
 from api.domain.entities.post_tag import PostTag as PostTagEntity
 from api.models.post_tag import PostTag as PostTagModel
 from api.errors import NotFoundException
 
 class PostTagRepository:
+    def __init__(self):
+        dt_now = datetime.now(pytz.timezone('America/Fortaleza'))
+        self.dt_local = dt_now.strftime('%Y-%m-%d %H:%M:%S.%f')
+
     def save(self, post_tag: PostTagEntity) -> PostTagEntity:
         post_tag_model = PostTagModel.from_entity(post_tag)
         post_tag_model.save()

@@ -109,7 +109,7 @@ AUTH_USER_MODEL = "api.User"
 
 LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'America/Sao_Paulo'
+TIME_ZONE = 'America/Fortaleza'
 
 USE_I18N = True
 

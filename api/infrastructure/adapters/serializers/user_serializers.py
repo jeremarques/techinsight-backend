@@ -9,6 +9,7 @@ class UserReadSerializer(serializers.ModelSerializer):
 
     is_active = serializers.ReadOnlyField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
 
     class Meta:
         model = User
@@ -19,6 +20,7 @@ class UserReadSerializer(serializers.ModelSerializer):
             'full_name',
             'is_active',
             'created_at',
+            'updated_at'
         )
 
 

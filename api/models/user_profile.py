@@ -13,7 +13,8 @@ class UserProfile(models.Model):
     bio = models.CharField(max_length=200, blank=True)
     about = models.TextField(blank=True)
     date_of_birth = models.DateField(blank=True, null=True)
-    created_at = models.DateTimeField(_("date joined"), default=timezone.now)
+    created_at = models.DateTimeField(_("date joined"), default=timezone.now, editable=False)
+    updated_at = models.DateTimeField("Data de atualização", null=True, editable=False)
 
     def to_entity(self) -> UserProfileEntity:
         return UserProfileEntity(
@@ -25,7 +26,8 @@ class UserProfile(models.Model):
             bio=self.bio,
             about=self.about,
             date_of_birth=self.date_of_birth,
-            created_at=self.created_at
+            created_at=self.created_at,
+            updated_at=self.updated_at
         )
 
     @staticmethod
@@ -38,7 +40,8 @@ class UserProfile(models.Model):
             bio=profile.bio,
             about=profile.about,
             date_of_birth=profile.date_of_birth,
-            created_at=profile.created_at
+            created_at=profile.created_at,
+            updated_at=profile.updated_at,
         )
 
     class Meta:

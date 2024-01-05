@@ -14,9 +14,10 @@ class User:
     is_staff: Optional[bool] = False
     is_superuser: Optional[bool] = False
     created_at: Optional[datetime] = field(default_factory=datetime.now)
+    updated_at: Optional[datetime] = None
     
     def __post_init__(self):
-        dt_now = datetime.now(pytz.timezone('America/Sao_Paulo'))
+        dt_now = datetime.now(pytz.timezone('America/Fortaleza'))
         dt_local = dt_now.strftime('%Y-%m-%d %H:%M:%S.%f')
 
         if not self.created_at:
@@ -38,5 +39,6 @@ class User:
             'is_active': self.is_active,
             'is_staff': self.is_staff,
             'is_superuser': self.is_superuser,
-            'created_at': self.created_at
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
         }

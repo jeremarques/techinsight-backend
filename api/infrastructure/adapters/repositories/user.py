@@ -1,8 +1,14 @@
+from datetime import datetime
+import pytz
 from api.domain.entities.user import User as UserEntity
 from api.models.user import User as UserModel
 from api.errors import NotFoundException
 
 class UserRepository:
+    def __init__(self):
+        dt_now = datetime.now(pytz.timezone('America/Fortaleza'))
+        self.dt_local = dt_now.strftime('%Y-%m-%d %H:%M:%S.%f')
+
     def save(self, user: UserEntity) -> UserEntity:
         user_model = UserModel.from_entity(user)
         user_model.set_password(user.password)
@@ -23,12 +29,14 @@ class UserRepository:
         return user_entity
     
     def update(self, id: int, username: str, email: str, full_name: str) -> UserEntity:
+        
         user_model = UserModel.objects.filter(id=id)
 
         user_model.update(
             username=username,
             email=email,
-            full_name=full_name
+            full_name=full_name,
+            updated_at=self.dt_local
         )
         updated_user_entity = self.get(username)
 

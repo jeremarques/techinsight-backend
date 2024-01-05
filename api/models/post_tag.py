@@ -6,14 +6,16 @@ from api.domain.entities.post_tag import PostTag as PostTagEntity
 
 class PostTag(models.Model):
     name = models.CharField(max_length=60, unique=True)
-    slug = models.SlugField(max_length=70, unique=True)
-    created_at = models.DateTimeField(_("date joined"), default=timezone.now)
+    slug = models.SlugField(max_length=60, unique=True)
+    created_at = models.DateTimeField(_("date joined"), default=timezone.now, editable=False)
+    updated_at = models.DateTimeField("Data de atualização", null=True, editable=False)
 
     def to_entity(self) -> PostTagEntity:
         return PostTagEntity(
             name=self.name,
             slug=self.slug,
-            created_at=self.created_at
+            created_at=self.created_at,
+            updated_at=self.updated_at
         )
 
     @staticmethod
@@ -21,7 +23,8 @@ class PostTag(models.Model):
         return PostTag(
             name=post_tag.name,
             slug=post_tag.slug,
-            created_at=post_tag.created_at
+            created_at=post_tag.created_at,
+            updated_at=post_tag.updated_at
         )
 
     class Meta:

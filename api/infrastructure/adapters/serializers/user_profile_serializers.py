@@ -19,6 +19,7 @@ class UserProfileReadSerializer(serializers.Serializer):
     about = serializers.CharField()
     date_of_birth = CustomDateField(allow_null=True, format="%Y-%m-%d")
     created_at = serializers.DateTimeField( format="%Y-%m-%d %H:%M:%S")
+    updated_at = serializers.DateTimeField( format="%Y-%m-%d %H:%M:%S")
 
 
 class UserProfileCreateSerializer(serializers.Serializer):
