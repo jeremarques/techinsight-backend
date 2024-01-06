@@ -4,6 +4,7 @@ from api.infrastructure.adapters.repositories.user_profile import UserProfileRep
 from api.infrastructure.adapters.repositories.post_tag import PostTagRepository
 from api.errors import NotFoundException, ForbiddenException
 
+
 class CreatePostUseCase:
     def __init__(self, post_repository: PostRepository, user_profile_repository: UserProfileRepository, post_tag_repository: PostTagRepository) -> None:
         self.post_repository = post_repository

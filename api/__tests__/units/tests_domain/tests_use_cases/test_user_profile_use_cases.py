@@ -1,5 +1,5 @@
 import unittest
-
+from datetime import datetime
 from api.domain.entities.user_profile import UserProfile
 from api.domain.entities.user import User
 from api.domain.use_cases.user_profile import CreateUserProfileUseCase, GetUserProfileUseCase, UpdateUserProfileUseCase
@@ -47,6 +47,25 @@ class UserProfileMockRepository:
         return True
 
 
+class UserMockRepository:
+    called_times = 0
+
+    def get(self, username: str):
+        self.called_times += 1
+
+        return User(
+            id=1,
+            username=username,
+            password='password123',
+            email='email@email.com',
+            full_name='Jeremias Marques',
+            is_staff=False,
+            is_superuser=False,
+            is_active=True,
+            created_at=datetime(2024, 1, 1, 15, 32, 46, 428775)
+        )
+
+
 class TestUserProfileUseCases(unittest.TestCase):
     def test_create_user_profile(self):
         user_profile_mock_repository = UserProfileMockRepository()
@@ -76,10 +95,11 @@ class TestUserProfileUseCases(unittest.TestCase):
 
     def test_should_return_user_profile(self):
         user_profile_mock_repository = UserProfileMockRepository()
+        user_mock_repository = UserMockRepository()
 
-        use_case = GetUserProfileUseCase(user_profile_mock_repository)
+        use_case = GetUserProfileUseCase(user_profile_mock_repository, user_mock_repository)
 
-        result = use_case.execute(1)
+        result = use_case.execute('jeremias')
 
         self.assertEqual(result.user.id, 1)
         self.assertEqual(result.name, 'Jeremias Marques')
