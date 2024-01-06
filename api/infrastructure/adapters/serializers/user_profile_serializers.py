@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .user_serializers import UserPostReadSerializer
+from .user_serializers import UserPostReadSerializer, UserReadSerializer
 
 
 class CustomDateField(serializers.DateField):
@@ -11,7 +11,7 @@ class CustomDateField(serializers.DateField):
 
 class UserProfileReadSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    user = UserPostReadSerializer(read_only=True)
+    user = UserReadSerializer(read_only=True)
     name = serializers.CharField(max_length=60)
     profile_photo = serializers.URLField()
     website_url = serializers.URLField()

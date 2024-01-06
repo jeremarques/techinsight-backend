@@ -1,5 +1,6 @@
 import pytz
 from datetime import datetime
+from django.db.models import F
 from api.domain.entities.post import Post as PostEntity
 from api.models.post import Post as PostModel
 from api.errors import NotFoundException, IntegrityError
@@ -16,7 +17,6 @@ class PostRepository:
             post_model.save()
         
         except IntegrityError:
-            print('Dei integrity error ----------------------------------------------------------------------------------------')
             post.set_public_id()
             self.save(post)
 
@@ -39,7 +39,7 @@ class PostRepository:
         post_model = PostModel.objects.filter(id=id)
         post_model.update(title=title, content=content, updated_at=self.dt_local)
         
-        post_updated_entity = self.get(post_model.public_id)
+        post_updated_entity = self.get(id=id)
 
         return post_updated_entity
     
@@ -49,7 +49,23 @@ class PostRepository:
 
         return None
     
-    def exists(self, *args, **kwargs):
+    def add_like(self, post_id: int) -> None:
+        post_model = PostModel.objects.filter(id=post_id).update(likes=F('likes') + 1)
+
+        return None
+    
+    def remove_like(self, post_id: int) -> None:
+        post_model = PostModel.objects.filter(id=post_id).update(likes=F('likes') - 1)
+
+        return None
+    
+    def filter(self, *args, **kwargs) -> list[PostEntity]:
+        posts_models = PostModel.objects.filter(*args, **kwargs)
+        posts_entities = [post_model.to_entity() for post_model in posts_models]
+
+        return posts_entities
+    
+    def exists(self, *args, **kwargs) -> bool:
         post = PostModel.objects.filter(**kwargs)
 
         if post.exists():

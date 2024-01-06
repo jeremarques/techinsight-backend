@@ -29,6 +29,9 @@ class CreatePostTagView(APIView):
         except AlreadyExistsException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_400_BAD_REQUEST)
         
+        except Exception as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
         post_tag_serialized = PostTagSerializer(post_tag)
         body = post_tag_serialized.data
 

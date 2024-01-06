@@ -69,6 +69,8 @@ class GetAndUpdateCurrentUserView(APIView):
         except EmailAlreadyExistsException as err:
             return Response({ 'email': str(err) }, status=status.HTTP_400_BAD_REQUEST)
         
+        except Exception as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         updated_user_serialized = UserReadSerializer(updated_user)
         body = updated_user_serialized.data
@@ -104,7 +106,10 @@ class CreateUserView(APIView):
         
         except EmailAlreadyExistsException as err:
             return Response({ 'email': str(err) }, status=status.HTTP_400_BAD_REQUEST)
-
+        
+        except Exception as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
         user_serialized = UserReadSerializer(user)
         body = user_serialized.data
 

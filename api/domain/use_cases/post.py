@@ -2,7 +2,7 @@ from api.domain.entities.post import Post
 from api.infrastructure.adapters.repositories.post import PostRepository
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
 from api.infrastructure.adapters.repositories.post_tag import PostTagRepository
-from api.errors import NotFoundException, AlreadyExistsException, IntegrityError
+from api.errors import NotFoundException, ForbiddenException
 
 class CreatePostUseCase:
     def __init__(self, post_repository: PostRepository, user_profile_repository: UserProfileRepository, post_tag_repository: PostTagRepository) -> None:
@@ -32,7 +32,11 @@ class CreatePostUseCase:
             tag
         )
         
-        created_post = self.post_repository.save(post)
+        try:
+            created_post = self.post_repository.save(post)
+
+        except Exception:
+            raise Exception('Ocorreu um erro ao salvar o post.')
 
         return created_post
     
@@ -50,3 +54,56 @@ class GetPostUseCase:
         
         return post
     
+
+class ListPostsUseCase:
+    def __init__(self, post_repository: PostRepository, user_profile_repository: UserProfileRepository) -> None:
+        self.post_repository = post_repository
+        self.user_profile_repository = user_profile_repository
+
+    def execute(self, profile_id: int) -> list[Post]:
+        if not self.user_profile_repository.exists(id=profile_id):
+            return NotFoundException('Esse perfil não existe.')
+        
+        posts = self.post_repository.filter(profile_id=profile_id)
+
+        return posts
+    
+
+class UpdatePostUseCase:
+    def __init__(self, post_repository: PostRepository) -> None:
+        self.post_repository = post_repository
+
+    def execute(self, profile_id: int, post_id: str, title: str, content: str) -> Post:
+        if not self.post_repository.exists(id=post_id):
+            raise NotFoundException(f'O post não existe.')
+        
+        if not self.post_repository.exists(id=post_id, profile_id=profile_id):
+            raise ForbiddenException('Você não pode editar um post de outro usuário.')
+        
+        try:
+            updated_post = self.post_repository.update(post_id, title, content)
+
+        except Exception as err:
+            raise Exception('Ocorreu um erro ao editar o post.')
+
+        return updated_post
+
+
+class DeletePostUseCase:
+    def __init__(self, post_repository: PostRepository) -> None:
+        self.post_repository = post_repository
+
+    def execute(self, profile_id: int, post_id: str) -> None:
+        if not self.post_repository.exists(id=post_id):
+            raise NotFoundException('Este post não existe.')
+        
+        if not self.post_repository.exists(id=post_id, profile_id=profile_id):
+            raise ForbiddenException('Você não pode excluir um post de outro usuário.')
+        
+        try:
+            self.post_repository.delete(post_id)
+
+        except Exception:
+            raise Exception('Ocorreu um erro ao tentar excluir o post.')
+        
+        return None

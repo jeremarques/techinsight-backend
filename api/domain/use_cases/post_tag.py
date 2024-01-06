@@ -11,7 +11,12 @@ class CreatePostTagUseCase:
             raise AlreadyExistsException(f'Já existe uma tag com nome {name}')
 
         post_tag = PostTag(name, slug)
-        created_post_tag = self.post_tag_repository.save(post_tag)
+
+        try:
+            created_post_tag = self.post_tag_repository.save(post_tag)
+
+        except Exception:
+            raise Exception('Ocorreu um erro ao criar a tag.')
 
         return created_post_tag
     

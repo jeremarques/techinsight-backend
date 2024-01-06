@@ -25,6 +25,9 @@ class CreateFollowView(APIView):
         
         except AlreadyExistsException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Exception as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         follow_serialized = RelationshipSerializer(follow_entity)
         body = follow_serialized.data
@@ -45,5 +48,8 @@ class DeleteFollowView(APIView):
 
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
+        
+        except Exception as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -1,5 +1,14 @@
 from django.db import IntegrityError
 
+
+class ForbiddenException(Exception):
+    """Raises an exception when a access to the resource is prohibited."""
+
+    def __init__(self, message: str = "Acesso negado"):
+        self.message = message
+        super().__init__(self.message)
+
+
 class NotFoundException(Exception):
     """Raises an exception when a requested resource is not found."""
 

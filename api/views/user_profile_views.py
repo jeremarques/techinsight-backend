@@ -4,23 +4,24 @@ from rest_framework.response import Response
 from rest_framework import status
 from api.domain.use_cases.user_profile import GetUserProfileUseCase, UpdateUserProfileUseCase
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
+from api.infrastructure.adapters.repositories.user import UserRepository
 from api.infrastructure.adapters.serializers.user_profile_serializers import UserProfileReadSerializer, UserProfileCreateSerializer
 from api.errors import NotFoundException
     
 
 class GetUserProfileView(APIView):
     def get(self, request: Dict[str, Any], *args, **kwargs):
-        user_id = kwargs.get('user_id')
-        user_case = GetUserProfileUseCase(UserProfileRepository())
+        username = kwargs.get('username')
+        user_case = GetUserProfileUseCase(UserProfileRepository(), UserRepository())
 
         try:
-            current_user_profile = user_case.execute(user_id)
+            user_profile = user_case.execute(username)
 
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
         
-        current_user_profile_serialized = UserProfileReadSerializer(current_user_profile)
-        body = current_user_profile_serialized.data
+        user_profile_serialized = UserProfileReadSerializer(user_profile)
+        body = user_profile_serialized.data
 
         return Response(body, status=status.HTTP_200_OK)
     
@@ -65,6 +66,9 @@ class GetAndUpdateCurrentUserProfileView(APIView):
 
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
+        
+        except Exception as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         profile_updated_serialized = UserProfileReadSerializer(profile_updated_entity)
         body = profile_updated_serialized.data

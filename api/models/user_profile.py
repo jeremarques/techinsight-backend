@@ -6,7 +6,7 @@ from api.domain.entities.user_profile import UserProfile as UserProfileEntity
 from api.models.user import User
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
     profile_photo = models.URLField(blank=True)
     website = models.URLField(blank=True)
     name = models.CharField(max_length=60)

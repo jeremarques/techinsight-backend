@@ -22,3 +22,7 @@ class PostCreateSerializer(serializers.Serializer):
     content = serializers.CharField()
     tag_id = serializers.IntegerField()
 
+
+class PostUpdateSerializer(serializers.Serializer):
+    title = serializers.CharField(max_length=120)
+    content = serializers.CharField()

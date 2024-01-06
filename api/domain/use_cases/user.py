@@ -29,10 +29,13 @@ class CreateUserUseCase:
             full_name=full_name,
         )
 
-        user_entity = self.user_repository.save(user)
+        try:
+            user_entity = self.user_repository.save(user)
+            create_user_profile_use_case = CreateUserProfileUseCase(self.user_profile_repository)
+            created_user_profile = create_user_profile_use_case.execute(user=user_entity, name=user_entity.full_name)
 
-        create_user_profile_use_case = CreateUserProfileUseCase(self.user_profile_repository)
-        created_user_profile = create_user_profile_use_case.execute(user=user_entity, name=user_entity.full_name)
+        except Exception:
+            raise Exception('Ocorreu um erro ao registrar o usuário.')
 
         return user_entity
 
@@ -71,6 +74,10 @@ class UpdateUserUseCase:
         elif exists_email:
             raise EmailAlreadyExistsException(f'Este e-mail já existe.')
         
-        updated_user = self.user_repository.update(id, username, email, full_name)
+        try:
+            updated_user = self.user_repository.update(id, username, email, full_name)
         
+        except Exception:
+            raise Exception('Ocorreu um erro ao atualizar o usuário.')
+
         return updated_user
