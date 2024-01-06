@@ -23,7 +23,8 @@ class Post:
         dt_now = datetime.now(pytz.timezone('America/Sao_Paulo'))
         dt_local = dt_now.strftime('%Y-%m-%d %H:%M:%S.%f')
 
-        self.set_public_id()
+        if not self.public_id:
+            self.set_public_id()
 
         if not self.created_at:
             object.__setattr__(self, 'created_at', dt_local)
