@@ -8,7 +8,7 @@ class PostTag(models.Model):
     name = models.CharField(max_length=60, unique=True)
     slug = models.SlugField(max_length=60, unique=True)
     created_at = models.DateTimeField(_("date joined"), default=timezone.now, editable=False)
-    updated_at = models.DateTimeField("Data de atualização", null=True, editable=False)
+    updated_at = models.DateTimeField("updated at", null=True, editable=False)
 
     def to_entity(self) -> PostTagEntity:
         return PostTagEntity(

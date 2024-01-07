@@ -36,6 +36,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         unique=True,
     )
     full_name = models.CharField(_('full name'), max_length=100, blank=True)
+    followers_counter = models.PositiveIntegerField('followers counter', default=0)
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,
@@ -50,7 +51,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     created_at = models.DateTimeField(_("date joined"), default=timezone.now, editable=False)
-    updated_at = models.DateTimeField("Data de atualização", null=True, editable=False)
+    updated_at = models.DateTimeField("updated at", null=True, editable=False)
 
     groups = models.ManyToManyField(
         Group,
@@ -98,6 +99,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             password=self.password,
             email=self.email,
             full_name=self.full_name,
+            followers=self.followers_counter,
             is_staff=self.is_staff,
             is_superuser=self.is_superuser,
             is_active=self.is_active,
@@ -112,6 +114,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             password=user.password,
             email=user.email,
             full_name=user.full_name,
+            followers_counter=user.followers,
             is_staff=user.is_staff,
             is_superuser=user.is_superuser,
             is_active=user.is_active,

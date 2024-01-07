@@ -2,24 +2,24 @@ from typing import Dict, Any
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from api.domain.use_cases.relationship import FollowUserUseCase, UnfollowUserUseCase
-from api.infrastructure.adapters.repositories.relationship import RelationshipRepository
-from api.infrastructure.adapters.repositories.user import UserRepository
-from api.infrastructure.adapters.serializers.relationship_serializers import RelationshipSerializer
+from api.domain.use_cases.post_like import CreatePostLikeUseCase, DeletePostLikeUseCase
+from api.infrastructure.adapters.repositories.post_like import PostLikeRepository
+from api.infrastructure.adapters.repositories.post import PostRepository
+from api.infrastructure.adapters.serializers.post_like_serializer import PostLikeSerializer
 from api.errors import NotFoundException, AlreadyExistsException
 
 
-class CreateFollowView(APIView):
+class CreateAndDeletePostLikeView(APIView):
 
     def post(self, request: Dict[str, Any], *args, **kwargs):
-        follower_id = request.user.id
-        followed_id = int(kwargs.get("user_id"))
 
-        use_case = FollowUserUseCase(RelationshipRepository(), UserRepository())
+        profile_id = request.user.profile.id
+        post_id = kwargs.get('post_id')
         
+        use_case = CreatePostLikeUseCase(PostLikeRepository(), PostRepository())
         try:
-            follow_entity = use_case.execute(follower_id, followed_id)
-        
+            post_like = use_case.execute(profile_id, post_id)
+
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
         
@@ -28,23 +28,21 @@ class CreateFollowView(APIView):
         
         except Exception as err:
             return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        follow_serialized = RelationshipSerializer(follow_entity)
-        body = follow_serialized.data
+        
+        post_like_serialized = PostLikeSerializer(post_like)
+        body = post_like_serialized.data
 
         return Response(body, status=status.HTTP_201_CREATED)
-
-
-class DeleteFollowView(APIView):
-
+    
     def delete(self, request: Dict[str, Any], *args, **kwargs):
-        follower_id = request.user.id
-        followed_id = int(kwargs.get("user_id"))
+        
+        profile_id = request.user.profile.id
+        post_id = kwargs.get('post_id')
 
-        use_case = UnfollowUserUseCase(RelationshipRepository(), UserRepository())
+        use_case = DeletePostLikeUseCase(PostLikeRepository(), PostRepository())
 
         try:
-            use_case.execute(follower_id, followed_id)
+            use_case.execute(profile_id, post_id)
 
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
@@ -53,3 +51,4 @@ class DeleteFollowView(APIView):
             return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         return Response(status=status.HTTP_204_NO_CONTENT)
+

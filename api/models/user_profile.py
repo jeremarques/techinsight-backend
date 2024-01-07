@@ -14,7 +14,7 @@ class UserProfile(models.Model):
     about = models.TextField(blank=True)
     date_of_birth = models.DateField(blank=True, null=True)
     created_at = models.DateTimeField(_("date joined"), default=timezone.now, editable=False)
-    updated_at = models.DateTimeField("Data de atualização", null=True, editable=False)
+    updated_at = models.DateTimeField("updated at", null=True, editable=False)
 
     def to_entity(self) -> UserProfileEntity:
         return UserProfileEntity(

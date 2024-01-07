@@ -49,13 +49,13 @@ class PostRepository:
 
         return None
     
-    def add_like(self, post_id: int) -> None:
-        post_model = PostModel.objects.filter(id=post_id).update(likes=F('likes') + 1)
+    def add_like(self, post_id: str) -> None:
+        post_model = PostModel.objects.filter(id=post_id).update(likes_counter=F('likes_counter') + 1)
 
         return None
     
-    def remove_like(self, post_id: int) -> None:
-        post_model = PostModel.objects.filter(id=post_id).update(likes=F('likes') - 1)
+    def remove_like(self, post_id: str) -> None:
+        post_model = PostModel.objects.filter(id=post_id).update(likes_counter=F('likes_counter') - 1)
 
         return None
     

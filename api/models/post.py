@@ -9,15 +9,15 @@ from api.domain.entities.post import Post as PostEntity
 
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    public_id = models.CharField("ID usado para as urls dos posts", max_length=14, unique=True)
-    profile = models.ForeignKey(UserProfile, related_name="posts", on_delete=models.CASCADE)
+    public_id = models.CharField('ID used for public posts URL', max_length=14, unique=True)
+    profile = models.ForeignKey(UserProfile, related_name='posts', on_delete=models.CASCADE)
     title = models.CharField(max_length=120)
     slug = models.SlugField(max_length=120)
     content = models.TextField()
-    tag = models.ForeignKey(PostTag, related_name="posts", on_delete=models.PROTECT)
-    likes = models.PositiveIntegerField("Quantidade de likes do post", default=0)
-    created_at = models.DateTimeField(_("date joined"), default=timezone.now, editable=False)
-    updated_at = models.DateTimeField("Data de atualização", null=True, editable=False)
+    tag = models.ForeignKey(PostTag, related_name='posts', on_delete=models.PROTECT)
+    likes_counter = models.PositiveIntegerField('likes counter', default=0)
+    created_at = models.DateTimeField(_('date joined'), default=timezone.now, editable=False)
+    updated_at = models.DateTimeField('updated at', null=True, editable=False)
 
     def to_entity(self) -> PostEntity:
         return PostEntity(
@@ -28,7 +28,7 @@ class Post(models.Model):
             slug=self.slug,
             content=self.content,
             tag=self.tag.to_entity(),
-            likes=self.likes,
+            likes=self.likes_counter,
             created_at=self.created_at,
             updated_at=self.updated_at
         )
@@ -42,7 +42,7 @@ class Post(models.Model):
             slug=post_entity.slug,
             content=post_entity.content,
             tag_id=post_entity.tag.id,
-            likes=post_entity.likes,
+            likes_counter=post_entity.likes,
             created_at=post_entity.created_at,
             updated_at=post_entity.updated_at
         )

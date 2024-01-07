@@ -1,5 +1,6 @@
-from datetime import datetime
 import pytz
+from datetime import datetime
+from django.db.models import F
 from api.domain.entities.user import User as UserEntity
 from api.models.user import User as UserModel
 from api.errors import NotFoundException
@@ -41,6 +42,16 @@ class UserRepository:
         updated_user_entity = self.get(username)
 
         return updated_user_entity
+    
+    def increment_follower(self, user_id: int) -> None:
+        user = UserModel.objects.filter(id=user_id).update(followers_counter=F('followers_counter') + 1)
+
+        return None
+    
+    def decrement_follower(self, user_id: int) -> None:
+        user = UserModel.objects.filter(id=user_id).update(followers_counter=F('followers_counter') - 1)
+
+        return None
 
     def exists(self, *args, **kwargs) -> bool:
         user = UserModel.objects.filter(*args, **kwargs)

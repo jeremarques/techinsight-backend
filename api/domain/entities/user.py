@@ -10,6 +10,7 @@ class User:
     password: str
     id: Optional[int] = None
     full_name: Optional[str] = ''
+    followers: Optional[int] = 0
     is_active: Optional[bool] = True
     is_staff: Optional[bool] = False
     is_superuser: Optional[bool] = False
@@ -36,6 +37,7 @@ class User:
             'full_name': self.full_name,
             'email': self.email,
             'password': self.password,
+            'followers': self.followers,
             'is_active': self.is_active,
             'is_staff': self.is_staff,
             'is_superuser': self.is_superuser,

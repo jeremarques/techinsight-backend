@@ -1,38 +1,30 @@
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from api.validators import validate_username
 
-from api.models.user import User
 
-class UserReadSerializer(serializers.ModelSerializer):
+class UserReadSerializer(serializers.Serializer):
 
+    id = serializers.IntegerField()
+    username = serializers.CharField()
+    full_name = serializers.CharField()
+    followers = serializers.IntegerField()
     is_active = serializers.ReadOnlyField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
-
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'username',
-            'email',
-            'full_name',
-            'is_active',
-            'created_at',
-            'updated_at'
-        )
 
 
 class UserPostReadSerializer(serializers.Serializer):
 
     id = serializers.IntegerField()
     username = serializers.CharField()
+    followers = serializers.IntegerField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
 
 
 class UserCreateSerializer(serializers.Serializer):
+
     username = serializers.CharField(required=True)
     email = serializers.EmailField(required=True)
     full_name = serializers.CharField(required=True)

@@ -4,6 +4,7 @@ from api.infrastructure.adapters.repositories.user_profile import UserProfileRep
 from api.domain.use_cases.user_profile import CreateUserProfileUseCase
 from api.errors import NotFoundException, AlreadyExistsException, UsernameAlreadyExistsException, EmailAlreadyExistsException
 
+
 class CreateUserUseCase:
     def __init__(self, user_repository: UserRepository, user_profile_repository: UserProfileRepository) -> None:
         self.user_repository = user_repository
