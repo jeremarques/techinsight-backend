@@ -29,5 +29,5 @@ class PostLike(models.Model):
         )
 
     class Meta:
-        verbose_name = "post tag"
-        verbose_name_plural = "post tags"
+        verbose_name = "post like"
+        verbose_name_plural = "posts likes"

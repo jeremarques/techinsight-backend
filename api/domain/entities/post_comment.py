@@ -4,14 +4,15 @@ from datetime import datetime
 from dataclasses import dataclass, field
 
 from .user_profile import UserProfile
-from .post import Post
 
 @dataclass(frozen=True)
-class PostLike:
-    profile_id: int
+class PostComment:
+    profile: UserProfile
     post_id: str
+    content: str
     id: Optional[int] = None
     created_at: Optional[datetime] = field(default_factory=datetime.now)
+    updated_at: Optional[datetime] = None
     
     def __post_init__(self):
         dt_now = datetime.now(pytz.timezone('America/Sao_Paulo'))
@@ -23,7 +24,8 @@ class PostLike:
     def to_dict(self):
         return {
             'id': self.id,
-            'profile_id': self.profile_id,
-            'post_id': self.post_id, 
-            'created_at': self.created_at,
+            'profile_id': self.profile,
+            'post_id': self.post_id,
+            'content': self.content,
+            'created_at': self.created_at
         }

@@ -16,7 +16,7 @@ class PostLikeRepository:
 
         return None
     
-    def exists(self, *args, **kwargs):
+    def exists(self, *args, **kwargs) -> bool:
         post_like = PostLikeModel.objects.filter(**kwargs)
 
         if post_like.exists():

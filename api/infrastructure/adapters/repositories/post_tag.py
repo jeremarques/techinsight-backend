@@ -33,7 +33,7 @@ class PostTagRepository:
 
         return None
     
-    def exists(self, *args, **kwargs):
+    def exists(self, *args, **kwargs) -> bool:
         post_tag = PostTagModel.objects.filter(**kwargs)
 
         if post_tag.exists():
