@@ -54,6 +54,11 @@ class MockRepository:
             created_at=datetime(2024, 1, 1, 15, 32, 46, 428775)
         )
 
+    def relations_count(self, id: int, *args, **kwargs):
+        self.called_times += 1
+        
+        return 2, 8
+
     def exists(self, *args, **kwargs):
         self.called_times += 1
 
@@ -100,11 +105,9 @@ class TestUserUseCases(unittest.TestCase):
 
         self.assertEqual(result.username, 'jeremias')
         self.assertEqual(result.email, 'jeremias@gmail.com')
-        self.assertEqual(result.password, 'password123')
         self.assertEqual(result.full_name, 'Jeremias Marques')
-        self.assertEqual(result.is_staff, False)
-        self.assertEqual(result.is_superuser, False)
-        self.assertEqual(result.is_active, True)
+        self.assertEqual(result.followers, 0)
+        self.assertEqual(result.following, 0)
         self.assertEqual(mock_repository.called_times, 3)
         
 
@@ -116,13 +119,12 @@ class TestUserUseCases(unittest.TestCase):
 
         self.assertEqual(result.username, 'jeremias')
         self.assertEqual(result.email, 'email@email.com')
-        self.assertEqual(result.password, 'password123')
         self.assertEqual(result.full_name, 'Jeremias Marques')
-        self.assertEqual(result.is_staff, False)
-        self.assertEqual(result.is_superuser, False)
+        self.assertEqual(result.followers, 2)
+        self.assertEqual(result.following, 8)
         self.assertEqual(result.is_active, True)
         self.assertEqual(result.created_at, datetime(2024, 1, 1, 15, 32, 46, 428775))
-        self.assertEqual(mock_repository.called_times, 1)
+        self.assertEqual(mock_repository.called_times, 2)
 
     def test_should_return_updated_user(self):
         mock_repository = MockRepository()
@@ -133,10 +135,9 @@ class TestUserUseCases(unittest.TestCase):
         self.assertEqual(result.id, 1)
         self.assertEqual(result.username, 'jeremias')
         self.assertEqual(result.email, 'email@email.com')
-        self.assertEqual(result.password, 'password123')
         self.assertEqual(result.full_name, 'Jeremias Marques')
-        self.assertEqual(result.is_staff, False)
-        self.assertEqual(result.is_superuser, False)
         self.assertEqual(result.is_active, True)
+        self.assertEqual(result.followers, 2)
+        self.assertEqual(result.following, 8)
         self.assertEqual(result.created_at, datetime(2024, 1, 1, 15, 32, 46, 428775))
-        self.assertEqual(mock_repository.called_times, 4)
+        self.assertEqual(mock_repository.called_times, 5)

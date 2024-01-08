@@ -77,6 +77,16 @@ class PostMockRepository:
             content=content,
             tag=tag
         )
+    
+    def likes(self, id: int):
+        self.called_times += 1
+
+        return 4
+    
+    def comments(self, id: int):
+        self.called_times += 1
+
+        return 1
 
     def exists(self, *args, **kwargs):
         self.called_times += 1
@@ -129,23 +139,30 @@ class TestPostUseCases(unittest.TestCase):
         self.assertEqual(result.slug, 'test-post')
         self.assertEqual(result.content, 'Post content here')
         self.assertEqual(result.tag.id, 2)
+        self.assertEqual(result.likes, 0)
+        self.assertEqual(result.comments, 0)
+        self.assertEqual(result.is_liked, False)
         self.assertEqual(post_mock_repository.called_times, 1)
         self.assertEqual(user_profile_mock_repository.called_times, 1)
         self.assertEqual(post_tag_mock_repository.called_times, 1)
 
     def test_should_return_post(self):
         post_mock_repository = PostMockRepository()
+        user_profile_mock_repository = UserProfileMockRepository()
 
-        use_case = GetPostUseCase(post_mock_repository)
-        result = use_case.execute('dbd83da73b0c47')
+        use_case = GetPostUseCase(post_mock_repository, user_profile_mock_repository)
+        result = use_case.execute('dbd83da73b0c47', None)
 
         self.assertEqual(result.public_id, 'dbd83da73b0c47')
         self.assertEqual(result.slug, 'post-test')
         self.assertEqual(result.profile.id, 1)
         self.assertEqual(result.profile.name, 'Jeremias Marques')
         self.assertEqual(result.tag.id, 2)
-        self.assertEqual(result.tag.slug, 'test-tag')
-        self.assertEqual(post_mock_repository.called_times, 1)
+        self.assertEqual(result.likes, 4)
+        self.assertEqual(result.comments, 1)
+        self.assertEqual(result.is_liked, False)
+        self.assertEqual(post_mock_repository.called_times, 3)
+        self.assertEqual(user_profile_mock_repository.called_times, 0)
 
     def test_should_update_post(self):
         post_mock_repository = PostMockRepository()
@@ -157,5 +174,8 @@ class TestPostUseCases(unittest.TestCase):
         self.assertEqual(result.profile.id, 1)
         self.assertEqual(result.title, 'Updated title')
         self.assertEqual(result.content, 'Updated content')
-        self.assertEqual(post_mock_repository.called_times, 3)
+        self.assertEqual(result.likes, 4)
+        self.assertEqual(result.comments, 1)
+        self.assertEqual(result.is_liked, False)
+        self.assertEqual(post_mock_repository.called_times, 5)
 

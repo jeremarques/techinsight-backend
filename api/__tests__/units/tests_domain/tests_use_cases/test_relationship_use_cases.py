@@ -59,8 +59,9 @@ class TestRelationshipUseCases(unittest.TestCase):
 
     def test_should_unfollow_user(self):
         relationship_mock_repository = RelationshipMockRepository()
+        user_mock_repository = UserMockRepository()
 
-        use_case = UnfollowUserUseCase(relationship_mock_repository)
+        use_case = UnfollowUserUseCase(relationship_mock_repository, user_mock_repository)
 
         relationship_data = {
             "follower_id": 2,
