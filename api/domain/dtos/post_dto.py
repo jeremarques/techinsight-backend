@@ -7,7 +7,7 @@ class PostDTO:
         self.profile = post.profile
         self.title = post.title
         self.slug = post.slug
-        self.content = post.slug
+        self.content = post.content
         self.tag = post.tag
         self.is_liked = is_liked
         self.likes = likes
