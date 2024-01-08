@@ -35,5 +35,6 @@ class PostComment(models.Model):
         )
 
     class Meta:
+        ordering = ['-created_at']
         verbose_name = "post comment"
         verbose_name_plural = "post comments"

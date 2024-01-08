@@ -12,7 +12,7 @@ class CreatePostUseCase:
         self.user_profile_repository = user_profile_repository
         self.post_tag_repository = post_tag_repository
 
-    def execute(self, user_id: int, title: str, slug: str, content: str, tag_id: int) -> Post:
+    def execute(self, user_id: int, title: str, slug: str, content: str, tag_id: int) -> PostDTO:
 
         try:
             profile = self.user_profile_repository.get(user_id=user_id)
@@ -46,14 +46,20 @@ class CreatePostUseCase:
     
 
 class GetPostUseCase:
-    def __init__(self, post_repository: PostRepository) -> None:
+    def __init__(self, post_repository: PostRepository, user_profile_repository: UserProfileRepository) -> None:
         self.post_repository = post_repository
+        self.user_profile_repository = user_profile_repository
 
-    def execute(self, public_id: str) -> Post:
+    def execute(self, public_id: str, user_profile_id: int | None) -> PostDTO:
         try:
             post_entity = self.post_repository.get(public_id=public_id)
             likes_counter = self.post_repository.likes(post_entity.id)
             comments_counter = self.post_repository.comments(post_entity.id)
+
+            if user_profile_id != None:
+                user_liked_posts_ids = self.user_profile_repository.liked_posts_ids(user_profile_id)
+            else:
+                user_liked_posts_ids = []
 
         except NotFoundException:
             raise NotFoundException(f'O post não foi encontrado.')
@@ -61,30 +67,81 @@ class GetPostUseCase:
         except Exception:
             raise Exception('Ocorreu um erro ao buscar o post.')
         
-        post = PostDTO(post_entity, likes_counter, comments_counter)
+        post = PostDTO(post_entity, likes_counter, comments_counter, post_entity.id in user_liked_posts_ids)
 
         return post
     
 
-class ListPostsUseCase:
+class ListProfilePostsUseCase:
     def __init__(self, post_repository: PostRepository, user_profile_repository: UserProfileRepository) -> None:
         self.post_repository = post_repository
         self.user_profile_repository = user_profile_repository
 
-    def execute(self, profile_id: int) -> list[Post]:
+    def execute(self, profile_id: int, user_profile_id: int | None) -> list[PostDTO]:
         if not self.user_profile_repository.exists(id=profile_id):
             return NotFoundException('Esse perfil não existe.')
         
-        posts = self.post_repository.filter(profile_id=profile_id)
+        try:
+            posts_entities = self.post_repository.filter(profile_id=profile_id)
 
+            if user_profile_id != None:
+                user_liked_posts_ids = self.user_profile_repository.liked_posts_ids(user_profile_id)
+            else:
+                user_liked_posts_ids = []
+
+            posts = []
+
+            for post_entity in posts_entities:
+                likes_counter = self.post_repository.likes(post_entity.id)
+                comments_counter = self.post_repository.comments(post_entity.id)
+                post = PostDTO(post_entity, likes_counter, comments_counter, post_entity.id in user_liked_posts_ids)
+                posts.append(post)
+
+        except Exception:
+            raise Exception('Ocorreu um erro ao buscar os posts.')
+        
         return posts
     
+
+class ListPostsByTag:
+    def __init__(self, post_repository: PostRepository, post_tag_repository: PostTagRepository, user_profile_repository: UserProfileRepository) -> None:
+        self.post_repository = post_repository
+        self.post_tag_repository = post_tag_repository
+        self.user_profile_repository = user_profile_repository
+
+    def execute(self, tag_slug: str, user_profile_id: int | None) -> list[PostDTO]:
+
+        try:
+            tag = self.post_tag_repository.get(slug=tag_slug)
+            posts_entities = self.post_repository.filter(tag_id=tag.id)
+
+            if user_profile_id != None:
+                user_liked_posts_ids = self.user_profile_repository.liked_posts_ids(user_profile_id)
+            else:
+                user_liked_posts_ids = []
+
+            posts = []
+
+            for post_entity in posts_entities:
+                likes_counter = self.post_repository.likes(post_entity.id)
+                comments_counter = self.post_repository.comments(post_entity.id)
+                post = PostDTO(post_entity, likes_counter, comments_counter, post_entity.id in user_liked_posts_ids)
+                posts.append(post)
+
+        except NotFoundException:
+            raise NotFoundException(f'Esta tag não foi encontrada.')
+        
+        except Exception:
+            raise Exception('Ocorreu um erro ao buscar os posts.')
+        
+        return posts
+        
 
 class UpdatePostUseCase:
     def __init__(self, post_repository: PostRepository) -> None:
         self.post_repository = post_repository
 
-    def execute(self, profile_id: int, post_id: str, title: str, content: str) -> Post:
+    def execute(self, profile_id: int, post_id: str, title: str, content: str) -> PostDTO:
         if not self.post_repository.exists(id=post_id):
             raise NotFoundException(f'O post não existe.')
         
@@ -96,10 +153,10 @@ class UpdatePostUseCase:
             likes_counter = self.post_repository.likes(post_id)
             comments_counter = self.post_repository.comments(post_id)
 
-        except Exception as err:
+        except Exception:
             raise Exception('Ocorreu um erro ao editar o post.')
         
-        post = PostDTO(updated_post_entity)
+        post = PostDTO(updated_post_entity, likes_counter, comments_counter)
 
         return post
 

@@ -23,7 +23,7 @@ class PostCommentRepository:
 
     def update(self, comment_id: int, content: str) -> PostCommentEntity:
         post_comment_model = PostCommentModel.objects.filter(id=comment_id)
-        post_comment_model.update(content=content)
+        post_comment_model.update(content=content, updated_at=self.dt_local)
 
         updated_post_comment = PostCommentModel.objects.get(id=comment_id).to_entity()
         return updated_post_comment

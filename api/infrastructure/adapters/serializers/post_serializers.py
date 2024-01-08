@@ -13,6 +13,7 @@ class PostReadSerializer(serializers.Serializer):
     tag = PostTagSerializer(read_only=True)
     likes = serializers.IntegerField()
     comments = serializers.IntegerField()
+    is_liked = serializers.BooleanField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     

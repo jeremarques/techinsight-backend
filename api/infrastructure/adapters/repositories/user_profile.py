@@ -1,5 +1,6 @@
 import pytz
 from datetime import date, datetime
+from uuid import UUID
 from api.domain.entities.user_profile import UserProfile as UserProfileEntity
 from api.models.user_profile import UserProfile as UserProfileModel
 from api.errors import NotFoundException
@@ -26,6 +27,13 @@ class UserProfileRepository:
         profile_entity = profile_model.to_entity()
 
         return profile_entity
+    
+    def liked_posts_ids(self, profile_id: int) -> list[UUID]:
+        profile = UserProfileModel.objects.get(id=profile_id)
+        likes = profile.likes.all()
+        posts_ids = [like.post_id for like in likes]
+
+        return posts_ids
 
     def update(self, user_id: int, name: str, profile_photo: str, website_url: str, bio: str, about: str, date_of_birth: date) -> UserProfileEntity:
 

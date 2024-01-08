@@ -11,7 +11,7 @@ class CreateUserUseCase:
         self.user_repository = user_repository
         self.user_profile_repository = user_profile_repository
 
-    def execute(self, username: str, password: str, email: str, full_name: str) -> UserEntity:
+    def execute(self, username: str, password: str, email: str, full_name: str) -> UserDTO:
         exists_username = self.user_repository.exists(username=username)
         exists_email = self.user_repository.exists(email=email)
         
@@ -48,7 +48,7 @@ class GetUserUseCase:
     def __init__(self, user_repository: UserRepository) -> None:
         self.user_repository = user_repository
 
-    def execute(self, username: str) -> UserEntity:
+    def execute(self, username: str) -> UserDTO:
         try:
             user_entity = self.user_repository.get(username)
             followers, following = self.user_repository.relations_count(user_entity.id)
@@ -67,7 +67,7 @@ class UpdateUserUseCase:
     def __init__(self, repository: UserRepository) -> None: 
         self.user_repository = repository
 
-    def execute(self, id: int, username: str, email: str, full_name: str) -> UserEntity:
+    def execute(self, id: int, username: str, email: str, full_name: str) -> UserDTO:
         if not self.user_repository.exists(id):
             raise NotFoundException(f'O usuário com id {id} não foi encontrado.')
         

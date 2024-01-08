@@ -3,7 +3,7 @@ from django.utils.text import slugify
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from api.domain.use_cases.post import CreatePostUseCase, GetPostUseCase, ListPostsUseCase, UpdatePostUseCase, DeletePostUseCase
+from api.domain.use_cases.post import CreatePostUseCase, GetPostUseCase, ListProfilePostsUseCase, ListPostsByTag, UpdatePostUseCase, DeletePostUseCase
 from api.infrastructure.adapters.repositories.post import PostRepository
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
 from api.infrastructure.adapters.repositories.post_tag import PostTagRepository
@@ -13,15 +13,23 @@ from api.errors import NotFoundException, ForbiddenException
 
 class GetPostView(APIView):
     def get(self, request: Dict[str, Any], *args, **kwargs):
+        if request.user.is_authenticated:
+            user_profile_id = request.user.profile.id
+        else:
+            user_profile_id = None
+
         public_id = kwargs.get('public_id')
 
-        use_case = GetPostUseCase(PostRepository())
+        use_case = GetPostUseCase(PostRepository(), UserProfileRepository())
 
         try:
-            post = use_case.execute(public_id)
+            post = use_case.execute(public_id, user_profile_id)
 
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         post_serialized = PostReadSerializer(post)
         body = post_serialized.data
@@ -29,23 +37,57 @@ class GetPostView(APIView):
         return Response(body, status=status.HTTP_200_OK)
     
 
-class ListPostsView(APIView):
+class ListProfilePostsView(APIView):
     def get(self, request: Dict[str, Any], *args, **kwargs):
+        if request.user.is_authenticated:
+            user_profile_id = request.user.profile.id
+        else:
+            user_profile_id = None
+
         profile_id = kwargs.get('profile_id')
 
-        use_case = ListPostsUseCase(PostRepository(), UserProfileRepository())
+        use_case = ListProfilePostsUseCase(PostRepository(), UserProfileRepository())
 
         try:
-            posts = use_case.execute(profile_id)
+            posts = use_case.execute(profile_id, user_profile_id)
 
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
+        
+        except Exception as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         posts_serialized = PostReadSerializer(posts, many=True)
         body = posts_serialized.data
 
         return Response(body, status=status.HTTP_200_OK)
+    
 
+class ListPostsByTagView(APIView):
+
+    def get(self, request: Dict[str, Any], *args, **kwargs):
+        if request.user.is_authenticated:
+            user_profile_id = request.user.profile.id
+        else:
+            user_profile_id = None
+
+        tag_slug = kwargs.get('tag_slug')
+        use_case = ListPostsByTag(PostRepository(), PostTagRepository(), UserProfileRepository())
+
+        try:
+            posts = use_case.execute(tag_slug, user_profile_id)
+
+        except NotFoundException as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
+        
+        except Exception as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        posts_serialized = PostReadSerializer(posts, many=True)
+        body = posts_serialized.data
+
+        return Response(body, status=status.HTTP_200_OK)
+        
 
 class CreateCurrentUserPostView(APIView):
 

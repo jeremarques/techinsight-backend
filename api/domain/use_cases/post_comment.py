@@ -2,7 +2,7 @@ from api.domain.entities.post_comment import PostComment
 from api.infrastructure.adapters.repositories.post_comment import PostCommentRepository
 from api.infrastructure.adapters.repositories.post import PostRepository
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
-from api.errors import NotFoundException, AlreadyExistsException
+from api.errors import NotFoundException, ForbiddenException
 
 
 class CreatePostCommentUseCase:
@@ -28,8 +28,71 @@ class CreatePostCommentUseCase:
             post_comment = self.post_comment_repository.save(post_comment)
 
         except Exception as err:
-            print(err)
             raise Exception('Ocorreu um erro ao adicionar o comentário.')
 
         return post_comment
     
+
+class UpdatePostCommentUseCase:
+    def __init__(self, post_comment_repository: PostCommentRepository, user_profile_repository: UserProfileRepository) -> None:
+        self.post_comment_repository = post_comment_repository
+        self.user_profile_repository = user_profile_repository
+
+    def execute(self, profile_id: int, comment_id: int, content: str) -> PostComment:
+
+        if not self.post_comment_repository.exists(id=comment_id):
+            raise NotFoundException('Este comentário não existe.')
+
+        if not self.post_comment_repository.exists(id=comment_id, profile_id=profile_id):
+            raise ForbiddenException('Você não pode editar um comentário de outro usuário.')
+        
+        try:
+            updated_post_comment = self.post_comment_repository.update(comment_id, content)
+
+        except Exception as err:
+            print(err)
+            raise Exception('Ocorreu um erro ao editar o comentário.')
+        
+        return updated_post_comment
+
+    
+class DeletePostCommentUseCase:
+    def __init__(self, post_comment_repository: PostCommentRepository, user_profile_repository: UserProfileRepository) -> None:
+        self.post_comment_repository = post_comment_repository
+        self.user_profile_repository = user_profile_repository
+
+    def execute(self, profile_id: int, comment_id: int) -> None:
+
+        if not self.post_comment_repository.exists(id=comment_id):
+            raise NotFoundException('Este comentário não existe.')
+
+        if not self.post_comment_repository.exists(id=comment_id, profile_id=profile_id):
+            raise ForbiddenException('Você não pode excluir um comentário de outro usuário.')
+        
+        try:
+            self.post_comment_repository.delete(comment_id)
+        
+        except Exception:
+            raise Exception('Não foi possível excluir o comentário.')
+        
+        return None
+
+
+class ListPostCommentsUseCase:
+    def __init__(self, post_comment_repository: PostCommentRepository, post_repository: UserProfileRepository) -> None:
+        self.post_comment_repository = post_comment_repository
+        self.post_repository = post_repository
+
+    def execute(self, post_id: str) -> list[PostComment]:
+
+        if not self.post_repository.exists(id=post_id):
+            raise NotFoundException('Este post não existe.')
+        
+        try:
+            comments = self.post_comment_repository.list_by_post(post_id)
+
+        except Exception:
+            raise Exception('Ocorreu um erro ao buscar os comentários.')
+        
+        return comments
+

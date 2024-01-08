@@ -1,7 +1,7 @@
 from api.domain.entities.post_like import PostLike
 from api.infrastructure.adapters.repositories.post_like import PostLikeRepository
 from api.infrastructure.adapters.repositories.post import PostRepository
-from api.errors import NotFoundException, AlreadyExistsException
+from api.errors import NotFoundException, AlreadyExistsException, ForbiddenException
 
 class CreatePostLikeUseCase:
     def __init__(self, post_like_repository: PostLikeRepository, post_repository: PostRepository) -> None:
@@ -11,6 +11,10 @@ class CreatePostLikeUseCase:
     def execute(self, profile_id: int, post_id: str) -> PostLike:
         if not self.post_repository.exists(id=post_id):
             raise NotFoundException('Este post não existe.')
+        
+        post = self.post_repository.get(id=post_id)
+        if post.profile.id == profile_id:
+            raise ForbiddenException('Você não pode dar like no seu próprio post.')
 
         if self.post_like_repository.exists(profile_id=profile_id, post_id=post_id):
             raise AlreadyExistsException(f'Você já deu like nessa postagem')

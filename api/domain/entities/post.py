@@ -1,5 +1,5 @@
 import pytz
-from uuid import uuid4
+from uuid import uuid4,UUID
 from typing import Optional
 from datetime import datetime
 from dataclasses import dataclass, field
@@ -13,7 +13,7 @@ class Post:
     slug: str
     content: str
     tag: PostTag
-    id: Optional[str] = None
+    id: Optional[UUID] = None
     public_id: Optional[str] = None
     created_at: Optional[datetime] = field(default_factory=datetime.now)
     updated_at: Optional[datetime] = None
