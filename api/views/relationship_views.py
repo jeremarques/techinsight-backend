@@ -2,6 +2,7 @@ from typing import Dict, Any
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from api.domain.use_cases.relationship import FollowUserUseCase, UnfollowUserUseCase
 from api.infrastructure.adapters.repositories.relationship import RelationshipRepository
 from api.infrastructure.adapters.repositories.user import UserRepository
@@ -10,6 +11,8 @@ from api.errors import NotFoundException, AlreadyExistsException
 
 
 class CreateFollowView(APIView):
+
+    permission_classes = [IsAuthenticated]
 
     def post(self, request: Dict[str, Any], *args, **kwargs):
         follower_id = request.user.id
@@ -36,6 +39,8 @@ class CreateFollowView(APIView):
 
 
 class DeleteFollowView(APIView):
+
+    permission_classes = [IsAuthenticated]
 
     def delete(self, request: Dict[str, Any], *args, **kwargs):
         follower_id = request.user.id

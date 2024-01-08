@@ -3,6 +3,7 @@ from django.utils.text import slugify
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny, IsAdminUser
 from api.domain.use_cases.post_tag import CreatePostTagUseCase, GetPostTagUseCase
 from api.infrastructure.adapters.repositories.post_tag import PostTagRepository
 from api.infrastructure.adapters.serializers.post_tag_serializers import PostTagSerializer
@@ -10,6 +11,8 @@ from api.errors import NotFoundException, AlreadyExistsException
 
 
 class CreatePostTagView(APIView):
+
+    permission_classes = [IsAdminUser]
 
     def post(self, request: Dict[str, Any], *args, **kwargs):
 
@@ -39,6 +42,9 @@ class CreatePostTagView(APIView):
         
 
 class GetPostTagView(APIView):
+
+    permission_classes = [AllowAny]
+
     def get(self, request: Dict[str, Any], *args, **kwargs):
         tag_slug = kwargs.get('tag_slug')
         use_case = GetPostTagUseCase(PostTagRepository())

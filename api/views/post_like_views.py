@@ -2,6 +2,7 @@ from typing import Dict, Any
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from api.domain.use_cases.post_like import CreatePostLikeUseCase, DeletePostLikeUseCase
 from api.infrastructure.adapters.repositories.post_like import PostLikeRepository
 from api.infrastructure.adapters.repositories.post import PostRepository
@@ -10,6 +11,8 @@ from api.errors import NotFoundException, AlreadyExistsException
 
 
 class CreateAndDeletePostLikeView(APIView):
+
+    permission_classes = [IsAuthenticated]
 
     def post(self, request: Dict[str, Any], *args, **kwargs):
 

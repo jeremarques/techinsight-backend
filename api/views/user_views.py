@@ -2,6 +2,7 @@ from typing import Dict, Any
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from api.domain.use_cases.user import GetUserUseCase, CreateUserUseCase, UpdateUserUseCase
 from api.infrastructure.adapters.repositories.user import UserRepository
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
@@ -9,11 +10,11 @@ from api.infrastructure.adapters.serializers.user_serializers import UserReadSer
 from api.errors import NotFoundException, AlreadyExistsException, UsernameAlreadyExistsException, EmailAlreadyExistsException
 
 class GetAndUpdateCurrentUserView(APIView):
+
+    permission_classes = [IsAuthenticated]
     
     def get(self, request: Dict[str, Any], *args, **kwargs):
         user = request.user
-        if not user.is_authenticated:
-            return Response({'message': 'Usuário não autenticado.'}, status=status.HTTP_401_UNAUTHORIZED)
 
         use_case = GetUserUseCase(UserRepository())
 
@@ -80,6 +81,8 @@ class GetAndUpdateCurrentUserView(APIView):
 
 class CreateUserView(APIView):
         
+    permission_classes = [AllowAny]
+
     def post(self, request: Dict[str, Any], *args, **kwargs):
         data = UserCreateSerializer(data=request.data)
         use_case = CreateUserUseCase(UserRepository(), UserProfileRepository())
@@ -117,6 +120,8 @@ class CreateUserView(APIView):
     
 
 class GetUserView(APIView):
+
+    permission_classes = [AllowAny]
 
     def get(self, request: Dict[str, Any], *args, **kwargs):
         username = kwargs.get('username')

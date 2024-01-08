@@ -2,6 +2,7 @@ from typing import Dict, Any
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from api.domain.use_cases.post_comment import CreatePostCommentUseCase, ListPostCommentsUseCase, UpdatePostCommentUseCase, DeletePostCommentUseCase
 from api.infrastructure.adapters.repositories.post_comment import PostCommentRepository
 from api.infrastructure.adapters.repositories.post import PostRepository
@@ -11,6 +12,8 @@ from api.errors import NotFoundException, ForbiddenException
 
 
 class ListCreatePostCommentView(APIView):
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def post(self, request: Dict[str, Any], *args, **kwargs):
 
@@ -58,6 +61,8 @@ class ListCreatePostCommentView(APIView):
     
 
 class UpdateAndDeletePostCommentView(APIView):
+
+    permission_classes = [IsAuthenticated]
 
     def put(self, request: Dict[str, Any], *args, **kwargs):
         

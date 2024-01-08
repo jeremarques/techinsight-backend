@@ -2,6 +2,7 @@ from typing import Dict, Any
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from api.domain.use_cases.user_profile import GetUserProfileUseCase, UpdateUserProfileUseCase
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
 from api.infrastructure.adapters.repositories.user import UserRepository
@@ -10,6 +11,9 @@ from api.errors import NotFoundException
     
 
 class GetUserProfileView(APIView):
+
+    permission_classes = [AllowAny]
+
     def get(self, request: Dict[str, Any], *args, **kwargs):
         username = kwargs.get('username')
         user_case = GetUserProfileUseCase(UserProfileRepository(), UserRepository())
@@ -27,6 +31,8 @@ class GetUserProfileView(APIView):
     
 
 class GetAndUpdateCurrentUserProfileView(APIView):
+
+    permission_classes = [IsAuthenticated]
 
     def get(self, request: Dict[str, Any], *args, **kwargs):
         user_id = request.user.id

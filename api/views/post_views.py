@@ -3,6 +3,7 @@ from django.utils.text import slugify
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from api.domain.use_cases.post import CreatePostUseCase, GetPostUseCase, ListProfilePostsUseCase, ListPostsByTag, UpdatePostUseCase, DeletePostUseCase
 from api.infrastructure.adapters.repositories.post import PostRepository
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
@@ -12,6 +13,9 @@ from api.errors import NotFoundException, ForbiddenException
 
 
 class GetPostView(APIView):
+
+    permission_classes = [AllowAny]
+
     def get(self, request: Dict[str, Any], *args, **kwargs):
         if request.user.is_authenticated:
             user_profile_id = request.user.profile.id
@@ -38,6 +42,9 @@ class GetPostView(APIView):
     
 
 class ListProfilePostsView(APIView):
+
+    permission_classes = [AllowAny]
+
     def get(self, request: Dict[str, Any], *args, **kwargs):
         if request.user.is_authenticated:
             user_profile_id = request.user.profile.id
@@ -65,6 +72,8 @@ class ListProfilePostsView(APIView):
 
 class ListPostsByTagView(APIView):
 
+    permission_classes = [AllowAny]
+
     def get(self, request: Dict[str, Any], *args, **kwargs):
         if request.user.is_authenticated:
             user_profile_id = request.user.profile.id
@@ -90,6 +99,8 @@ class ListPostsByTagView(APIView):
         
 
 class CreateCurrentUserPostView(APIView):
+
+    permission_classes = [IsAuthenticated]
 
     def post(self, request: Dict[str, Any], *args, **kwargs):
         user = request.user
@@ -121,6 +132,9 @@ class CreateCurrentUserPostView(APIView):
         
 
 class UpdateAndDeleteCurrentUserPostView(APIView):
+
+    permission_classes = [IsAuthenticated]
+    
     def put(self, request: Dict[str, Any], *args, **kwargs):
         profile_id = request.user.profile.id
         post_id = kwargs.get('post_id')
