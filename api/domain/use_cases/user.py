@@ -48,10 +48,14 @@ class GetUserUseCase:
     def __init__(self, user_repository: UserRepository) -> None:
         self.user_repository = user_repository
 
-    def execute(self, username: str) -> UserDTO:
+    def execute(self, username: str, user_id: int | None) -> UserDTO:
         try:
             user_entity = self.user_repository.get(username)
             followers, following = self.user_repository.relations_count(user_entity.id)
+            if user_id != None:
+                following_ids = self.user_repository.following_ids(user_id)
+            else:
+                following_ids = []
 
         except NotFoundException as err:
             raise err
@@ -59,7 +63,7 @@ class GetUserUseCase:
         except Exception:
             raise Exception('Ocorreu um erro ao buscar o usuário.')
 
-        user = UserDTO(user_entity, followers, following)
+        user = UserDTO(user_entity, followers, following, user_entity.id in following_ids)
         return user
 
 

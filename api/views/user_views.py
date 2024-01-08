@@ -15,11 +15,10 @@ class GetAndUpdateCurrentUserView(APIView):
     
     def get(self, request: Dict[str, Any], *args, **kwargs):
         user = request.user
-
         use_case = GetUserUseCase(UserRepository())
 
         try:    
-            user = use_case.execute(user.username)
+            user = use_case.execute(user.username, None)
         
         except NotFoundException as err:
             return Response({'error': str(err)}, status=status.HTTP_404_NOT_FOUND)
@@ -124,11 +123,16 @@ class GetUserView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request: Dict[str, Any], *args, **kwargs):
+        if request.user.is_authenticated:
+            user_id = request.user.id
+        else:
+            user_id = None
+
         username = kwargs.get('username')
         use_case = GetUserUseCase(UserRepository())
         
         try:
-            user = use_case.execute(username)
+            user = use_case.execute(username, user_id)
 
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)

@@ -15,11 +15,16 @@ class GetUserProfileView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request: Dict[str, Any], *args, **kwargs):
+        if request.user.is_authenticated:
+            user_id = request.user.id
+        else:
+            user_id = None
+
         username = kwargs.get('username')
         user_case = GetUserProfileUseCase(UserProfileRepository(), UserRepository())
 
         try:
-            user_profile = user_case.execute(username)
+            user_profile = user_case.execute(username, user_id)
 
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)

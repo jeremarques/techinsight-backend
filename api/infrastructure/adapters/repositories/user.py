@@ -50,6 +50,14 @@ class UserRepository:
 
         return followers, following
     
+    def following_ids(self, user_id: int) -> list[int]:
+        user = UserModel.objects.get(id=user_id)
+        following = user.following.all()
+
+        following_ids = [item.followed_id for item in following]
+
+        return following_ids
+    
     def exists(self, *args, **kwargs) -> bool:
         user = UserModel.objects.filter(*args, **kwargs)
 

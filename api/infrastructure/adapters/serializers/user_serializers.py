@@ -10,6 +10,7 @@ class UserReadSerializer(serializers.Serializer):
     full_name = serializers.CharField()
     followers = serializers.IntegerField()
     following = serializers.IntegerField()
+    is_follower = serializers.BooleanField()
     is_active = serializers.ReadOnlyField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)

@@ -3,6 +3,8 @@ from api.domain.entities.user_profile import UserProfile as UserProfileEntity
 from api.domain.entities.user import User as UserEntity
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
 from api.infrastructure.adapters.repositories.user import UserRepository
+from api.domain.dtos.user_profile_dto import UserProfileDTO
+from api.domain.dtos.user_dto import UserDTO
 from api.errors import NotFoundException
 
 
@@ -27,20 +29,28 @@ class GetUserProfileUseCase:
         self.user_profile_repository = user_profile_repository
         self.user_repository = user_repository
 
-    def execute(self, username: str) -> UserProfileEntity:
+    def execute(self, username: str, user_id: int | None) -> UserProfileDTO:
         try:
             user = self.user_repository.get(username)
 
-        except NotFoundException as err:
+        except NotFoundException:
             raise NotFoundException(f'Este usuário não existe.')
 
         try:
             user_profile_entity = self.user_profile_repository.get(user_id=user.id)
+            followers, following = self.user_repository.relations_count(user.id)
+            if user_id != None:
+                following_ids = self.user_repository.following_ids(user_id)
+            else:
+                following_ids = []
+
+            user_dto = UserDTO(user_profile_entity.user, followers, following, user_profile_entity.user.id in following_ids)
+            user_profile = UserProfileDTO(user_profile_entity, user_dto)
         
-        except NotFoundException as err:
+        except NotFoundException:
             raise NotFoundException(f'Este perfil não foi encontrado.')
         
-        return user_profile_entity
+        return user_profile
     
 
 class UpdateUserProfileUseCase:
