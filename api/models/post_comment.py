@@ -19,6 +19,7 @@ class PostComment(models.Model):
             id=self.pk,
             profile=self.profile.to_entity(),
             post_id=self.post.id,
+            content=self.content,
             created_at=self.created_at,
             updated_at=self.updated_at
         )
@@ -29,6 +30,7 @@ class PostComment(models.Model):
             profile_id=post_comment.profile.id,
             post_id=post_comment.post_id,
             created_at=post_comment.created_at,
+            content=post_comment.content,
             updated_at=post_comment.updated_at
         )
 

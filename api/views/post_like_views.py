@@ -39,7 +39,7 @@ class CreateAndDeletePostLikeView(APIView):
         profile_id = request.user.profile.id
         post_id = kwargs.get('post_id')
 
-        use_case = DeletePostLikeUseCase(PostLikeRepository(), PostRepository())
+        use_case = DeletePostLikeUseCase(PostLikeRepository())
 
         try:
             use_case.execute(profile_id, post_id)

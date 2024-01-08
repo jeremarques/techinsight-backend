@@ -5,6 +5,7 @@ from api.views.relationship_views import CreateFollowView, DeleteFollowView
 from api.views.post_tag_views import CreatePostTagView, GetPostTagView
 from api.views.post_views import  GetPostView, ListPostsView, CreateCurrentUserPostView, UpdateAndDeleteCurrentUserPostView
 from api.views.post_like_views import CreateAndDeletePostLikeView
+from api.views.post_comment_views import ListCreatePostCommentView
 
 urlpatterns = [
     path('users/register/', CreateUserView.as_view()), # work
@@ -19,7 +20,7 @@ urlpatterns = [
     path('me/posts/<str:post_id>/', UpdateAndDeleteCurrentUserPostView.as_view()), # work
     path('posts/<str:public_id>/', GetPostView.as_view()), # work
     path('posts/<str:post_id>/like/', CreateAndDeletePostLikeView.as_view()), # work
-    # path('posts/<str:post_id>/comments/'),
+    path('posts/<str:post_id>/comments/', ListCreatePostCommentView.as_view()), 
     # path('posts/<str:post_id>/comments/<int:comment_id>/'),
     path('tags/', CreatePostTagView.as_view()), # work
     path('tags/<slug:tag_slug>/', GetPostTagView.as_view()), # work

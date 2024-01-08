@@ -9,6 +9,7 @@ class UserReadSerializer(serializers.Serializer):
     username = serializers.CharField()
     full_name = serializers.CharField()
     followers = serializers.IntegerField()
+    following = serializers.IntegerField()
     is_active = serializers.ReadOnlyField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
@@ -18,7 +19,6 @@ class UserPostReadSerializer(serializers.Serializer):
 
     id = serializers.IntegerField()
     username = serializers.CharField()
-    followers = serializers.IntegerField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
 

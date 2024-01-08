@@ -43,16 +43,13 @@ class UserRepository:
 
         return updated_user_entity
     
-    def increment_follower(self, user_id: int) -> None:
-        user = UserModel.objects.filter(id=user_id).update(followers_counter=F('followers_counter') + 1)
+    def relations_count(self, user_id: int) -> int:
+        user = UserModel.objects.get(id=user_id)
+        followers = user.followers.count()
+        following = user.following.count()
 
-        return None
+        return followers, following
     
-    def decrement_follower(self, user_id: int) -> None:
-        user = UserModel.objects.filter(id=user_id).update(followers_counter=F('followers_counter') - 1)
-
-        return None
-
     def exists(self, *args, **kwargs) -> bool:
         user = UserModel.objects.filter(*args, **kwargs)
 

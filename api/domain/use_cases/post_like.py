@@ -19,7 +19,6 @@ class CreatePostLikeUseCase:
 
         try:
             created_post_like = self.post_like_repository.save(post_like)
-            self.post_repository.add_like(post_id)
 
         except Exception:
             raise Exception('Ocorreu um erro ao dar like na postagem.')
@@ -28,9 +27,8 @@ class CreatePostLikeUseCase:
     
 
 class DeletePostLikeUseCase:
-    def __init__(self, post_like_repository: PostLikeRepository, post_repository: PostRepository) -> None:
+    def __init__(self, post_like_repository: PostLikeRepository) -> None:
         self.post_like_repository = post_like_repository
-        self.post_repository = post_repository
 
     def execute(self, profile_id: int, post_id: str) -> None:
         if not self.post_like_repository.exists(profile_id=profile_id, post_id=post_id):
@@ -38,7 +36,6 @@ class DeletePostLikeUseCase:
         
         try:
             post_like = self.post_like_repository.delete(profile_id, post_id)
-            self.post_repository.remove_like(post_id)
 
         except NotFoundException:
             raise NotFoundException(f'Ocorreu um erro ao retirar o like da postagem.')

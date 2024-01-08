@@ -1,23 +1,35 @@
 from api.domain.entities.post_comment import PostComment
 from api.infrastructure.adapters.repositories.post_comment import PostCommentRepository
+from api.infrastructure.adapters.repositories.post import PostRepository
+from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
 from api.errors import NotFoundException, AlreadyExistsException
 
+
 class CreatePostCommentUseCase:
-    def __init__(self, post_comment_repository: PostCommentRepository) -> None:
+    def __init__(self, post_comment_repository: PostCommentRepository, post_repository: PostRepository, user_profile_repository: UserProfileRepository) -> None:
         self.post_comment_repository = post_comment_repository
+        self.post_repository = post_repository
+        self.user_profile_repository = user_profile_repository
 
-    def execute(self, profile_id: int, post_id: str) -> PostComment:
+    def execute(self, profile_id: int, post_id: str, content: str) -> PostComment:
 
-        if self.post_comment_repository.exists(profile_id=profile_id, post_id=post_id):
-            raise AlreadyExistsException(f'Você já deu like nessa postagem')
+        if not self.post_repository.exists(id=post_id):
+            raise NotFoundException(f'Este post não existe')
 
-        post_comment = PostComment(profile_id, post_id)
+        try: 
+            user_profile = self.user_profile_repository.get(id=profile_id)
+
+        except NotFoundException as err:
+            raise err
+
+        post_comment = PostComment(user_profile, post_id, content)
 
         try:
-            created_post_comment = self.post_comment_repository.save(post_comment)
+            post_comment = self.post_comment_repository.save(post_comment)
 
-        except Exception:
-            raise Exception('Ocorreu um erro ao dar like na postagem.')
+        except Exception as err:
+            print(err)
+            raise Exception('Ocorreu um erro ao adicionar o comentário.')
 
-        return created_post_comment
+        return post_comment
     

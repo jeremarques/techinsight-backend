@@ -2,6 +2,7 @@ from api.domain.entities.post import Post
 from api.infrastructure.adapters.repositories.post import PostRepository
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
 from api.infrastructure.adapters.repositories.post_tag import PostTagRepository
+from api.domain.dtos.post_dto import PostDTO
 from api.errors import NotFoundException, ForbiddenException
 
 
@@ -34,12 +35,14 @@ class CreatePostUseCase:
         )
         
         try:
-            created_post = self.post_repository.save(post)
+            post_entity = self.post_repository.save(post)
 
         except Exception:
             raise Exception('Ocorreu um erro ao salvar o post.')
+        
+        post = PostDTO(post_entity, 0, 0)
 
-        return created_post
+        return post
     
 
 class GetPostUseCase:
@@ -48,11 +51,18 @@ class GetPostUseCase:
 
     def execute(self, public_id: str) -> Post:
         try:
-            post = self.post_repository.get(public_id=public_id)
+            post_entity = self.post_repository.get(public_id=public_id)
+            likes_counter = self.post_repository.likes(post_entity.id)
+            comments_counter = self.post_repository.comments(post_entity.id)
 
         except NotFoundException:
             raise NotFoundException(f'O post não foi encontrado.')
         
+        except Exception:
+            raise Exception('Ocorreu um erro ao buscar o post.')
+        
+        post = PostDTO(post_entity, likes_counter, comments_counter)
+
         return post
     
 
@@ -82,12 +92,16 @@ class UpdatePostUseCase:
             raise ForbiddenException('Você não pode editar um post de outro usuário.')
         
         try:
-            updated_post = self.post_repository.update(post_id, title, content)
+            updated_post_entity = self.post_repository.update(post_id, title, content)
+            likes_counter = self.post_repository.likes(post_id)
+            comments_counter = self.post_repository.comments(post_id)
 
         except Exception as err:
             raise Exception('Ocorreu um erro ao editar o post.')
+        
+        post = PostDTO(updated_post_entity)
 
-        return updated_post
+        return post
 
 
 class DeletePostUseCase:

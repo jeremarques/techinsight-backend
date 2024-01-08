@@ -21,7 +21,6 @@ class FollowUserUseCase:
 
         try:
             created_relationship_entity = self.relationship_repository.save(relationship_entity)
-            self.user_repository.increment_follower(followed_id)
 
         except Exception:
             raise Exception('Ocorreu um erro ao seguir o usuário.')
@@ -41,7 +40,6 @@ class UnfollowUserUseCase:
 
         try:
             self.relationship_repository.delete(follower_id, followed_id)
-            self.user_repository.decrement_follower(followed_id)
 
         except Exception:
             raise Exception('Ocorreu um erro ao parar de seguir o usuário.')

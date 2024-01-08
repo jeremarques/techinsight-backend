@@ -15,7 +15,6 @@ class Post(models.Model):
     slug = models.SlugField(max_length=120)
     content = models.TextField()
     tag = models.ForeignKey(PostTag, related_name='posts', on_delete=models.PROTECT)
-    likes_counter = models.PositiveIntegerField('likes counter', default=0)
     created_at = models.DateTimeField(_('date joined'), default=timezone.now, editable=False)
     updated_at = models.DateTimeField('updated at', null=True, editable=False)
 
@@ -28,7 +27,6 @@ class Post(models.Model):
             slug=self.slug,
             content=self.content,
             tag=self.tag.to_entity(),
-            likes=self.likes_counter,
             created_at=self.created_at,
             updated_at=self.updated_at
         )
@@ -42,7 +40,6 @@ class Post(models.Model):
             slug=post_entity.slug,
             content=post_entity.content,
             tag_id=post_entity.tag.id,
-            likes_counter=post_entity.likes,
             created_at=post_entity.created_at,
             updated_at=post_entity.updated_at
         )

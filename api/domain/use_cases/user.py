@@ -2,6 +2,7 @@ from api.domain.entities.user import User as UserEntity
 from api.infrastructure.adapters.repositories.user import UserRepository
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
 from api.domain.use_cases.user_profile import CreateUserProfileUseCase
+from api.domain.dtos.user_dto import UserDTO
 from api.errors import NotFoundException, AlreadyExistsException, UsernameAlreadyExistsException, EmailAlreadyExistsException
 
 
@@ -38,20 +39,27 @@ class CreateUserUseCase:
         except Exception:
             raise Exception('Ocorreu um erro ao registrar o usuário.')
 
-        return user_entity
+        user = UserDTO(user_entity, 0, 0)
+
+        return user
 
 
 class GetUserUseCase:
-    def __init__(self, repository: UserRepository) -> None:
-        self.user_repository = repository
+    def __init__(self, user_repository: UserRepository) -> None:
+        self.user_repository = user_repository
 
     def execute(self, username: str) -> UserEntity:
         try:
-            user = self.user_repository.get(username)
+            user_entity = self.user_repository.get(username)
+            followers, following = self.user_repository.relations_count(user_entity.id)
 
         except NotFoundException as err:
             raise err
+        
+        except Exception:
+            raise Exception('Ocorreu um erro ao buscar o usuário.')
 
+        user = UserDTO(user_entity, followers, following)
         return user
 
 
@@ -76,9 +84,13 @@ class UpdateUserUseCase:
             raise EmailAlreadyExistsException(f'Este e-mail já existe.')
         
         try:
-            updated_user = self.user_repository.update(id, username, email, full_name)
+            updated_user_entity = self.user_repository.update(id, username, email, full_name)
+            followers, following = self.user_repository.relations_count(updated_user_entity.id)
         
         except Exception:
             raise Exception('Ocorreu um erro ao atualizar o usuário.')
+        
+
+        updated_user = UserDTO(updated_user_entity, followers, following)
 
         return updated_user
