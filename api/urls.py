@@ -11,7 +11,7 @@ from api.views.post_comment_views import ListCreatePostCommentView, UpdateAndDel
 urlpatterns = [
     path('login/', TokenObtainPairView.as_view()), # work, any
     path('login/refresh/', TokenRefreshView.as_view()), # work, any
-    path('users/register/', CreateUserView.as_view()), # work, any
+    path('register/', CreateUserView.as_view()), # work, any
     path('users/<str:username>/', GetUserView.as_view()), # work, any
     path('users/<str:username>/profile/', GetUserProfileView.as_view()), # work, any
     path('users/<int:user_id>/follow/', CreateFollowView.as_view()), # work, authenticated
