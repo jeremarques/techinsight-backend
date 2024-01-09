@@ -34,7 +34,7 @@ class GetUserProfileUseCase:
             user = self.user_repository.get(username)
 
         except NotFoundException:
-            raise NotFoundException(f'Este usuário não existe.')
+            raise NotFoundException(f'Esse usuário não existe.')
 
         try:
             user_profile_entity = self.user_profile_repository.get(user_id=user.id)
@@ -48,7 +48,7 @@ class GetUserProfileUseCase:
             user_profile_dto = UserProfileDTO(user_profile_entity, user_dto)
         
         except NotFoundException:
-            raise NotFoundException(f'Este perfil não foi encontrado.')
+            raise NotFoundException(f'Esse perfil não existe.')
         
         except Exception:
             raise Exception('Ocorreu um erro ao buscar o perfil.')
@@ -64,7 +64,7 @@ class UpdateUserProfileUseCase:
     def execute(self, user_id: int, name: str, profile_photo: str, website_url: str, bio: str, about: str, date_of_birth: date) -> UserProfileDTO:
 
         if not self.user_profile_repository.exists(user_id=user_id):
-            raise NotFoundException(f'Este perfil não foi encontrado.')
+            raise NotFoundException(f'Esse perfil não existe.')
         
         try:
             updated_user_profile_entity = self.user_profile_repository.update(

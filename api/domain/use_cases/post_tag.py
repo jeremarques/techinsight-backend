@@ -8,7 +8,7 @@ class CreatePostTagUseCase:
 
     def execute(self, name: str, slug: str) -> PostTag:
         if self.post_tag_repository.exists(slug=slug):
-            raise AlreadyExistsException(f'Já existe uma tag com nome {name}')
+            raise AlreadyExistsException('Já existe uma tag com esse nome.')
 
         post_tag = PostTag(name, slug)
 
@@ -21,6 +21,20 @@ class CreatePostTagUseCase:
         return created_post_tag
     
 
+class ListTagsUseCase:
+    def __init__(self, post_tag_repository: PostTagRepository) -> None:
+        self.post_tag_repository = post_tag_repository
+    
+    def execute(self) -> list[PostTag]:
+        try:
+            post_tags = self.post_tag_repository.list_all()
+
+        except Exception:
+            raise Exception('Ocorreu um erro ao buscar as tags.')
+        
+        return post_tags
+
+
 class GetPostTagUseCase:
     def __init__(self, post_tag_repository: PostTagRepository) -> None:
         self.post_tag_repository = post_tag_repository
@@ -30,6 +44,6 @@ class GetPostTagUseCase:
             post_tag = self.post_tag_repository.get(slug=slug)
 
         except NotFoundException:
-            raise NotFoundException(f'A tag {slug} não foi encontrada')
+            raise NotFoundException('Essa tag não existe.')
         
         return post_tag

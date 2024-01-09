@@ -21,7 +21,7 @@ class UserProfileRepository:
         try:
             profile_model = UserProfileModel.objects.get(*args, **kwargs)
 
-        except UserProfileModel.DoesNotExist as err:
+        except UserProfileModel.DoesNotExist:
             raise NotFoundException
 
         profile_entity = profile_model.to_entity()

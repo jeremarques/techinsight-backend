@@ -22,8 +22,8 @@ class UserRepository:
         try:
             user_model = UserModel.objects.get(username=username)
 
-        except UserModel.DoesNotExist as err:
-            raise NotFoundException(f'O usuário {username} não foi encontrado.')
+        except UserModel.DoesNotExist:
+            raise NotFoundException('Esse usuário não existe.')
         
         user_entity = user_model.to_entity()
 

@@ -27,6 +27,12 @@ class PostTagRepository:
 
         return post_tag_entity
     
+    def list_all(self) -> list[PostTagEntity]:
+        tags_models = PostTagModel.objects.all()
+        tags_entities = [tag.to_entity() for tag in tags_models]
+
+        return tags_entities
+
     def delete(self, id: int) -> None:
         post_tag_model = PostTagModel.objects.get(id=id)
         post_tag_model.delete()

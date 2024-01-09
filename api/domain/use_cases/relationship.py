@@ -15,7 +15,7 @@ class FollowUserUseCase:
             raise NotFoundException('O usuário que você deseja seguir não foi encontrado.')
         
         if self.relationship_repository.is_following(follower_id, followed_id):
-            raise AlreadyExistsException('Você já está seguindo este usuário')
+            raise AlreadyExistsException('Você já segue esse usuário.')
         
         relationship_entity = Relationship(follower_id, followed_id)
 
@@ -36,7 +36,7 @@ class UnfollowUserUseCase:
     def execute(self, follower_id: int, followed_id: int) -> None:
         
         if not self.relationship_repository.is_following(follower_id, followed_id):
-            raise NotFoundException('Você não segue este usuário')
+            raise NotFoundException('Você não segue esse usuário')
 
         try:
             self.relationship_repository.delete(follower_id, followed_id)

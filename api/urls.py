@@ -3,7 +3,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from api.views.user_views import GetAndUpdateCurrentUserView, CreateUserView, GetUserView
 from api.views.user_profile_views import GetAndUpdateCurrentUserProfileView, GetUserProfileView
 from api.views.relationship_views import CreateFollowView, DeleteFollowView
-from api.views.post_tag_views import CreatePostTagView, GetPostTagView
+from api.views.post_tag_views import ListCreatePostTagView, GetPostTagView
 from api.views.post_views import  GetPostView, ListProfilePostsView, ListPostsByTagView, CreateCurrentUserPostView, UpdateAndDeleteCurrentUserPostView
 from api.views.post_like_views import CreateAndDeletePostLikeView
 from api.views.post_comment_views import ListCreatePostCommentView, UpdateAndDeletePostCommentView
@@ -23,9 +23,9 @@ urlpatterns = [
     path('me/posts/<str:post_id>/', UpdateAndDeleteCurrentUserPostView.as_view()), # work, authenticated
     path('posts/<str:public_id>/', GetPostView.as_view()), # work, any
     path('posts/<str:post_id>/likes/', CreateAndDeletePostLikeView.as_view()), # work, authenticated
-    path('posts/<str:post_id>/comments/', ListCreatePostCommentView.as_view()), # work, any/authenticated
+    path('posts/<str:public_id>/comments/', ListCreatePostCommentView.as_view()), # work, any/authenticated
     path('posts/comments/<int:comment_id>/', UpdateAndDeletePostCommentView.as_view()), # work, authenticated
-    path('tags/', CreatePostTagView.as_view()), # work, authenticated
+    path('tags/', ListCreatePostTagView.as_view()), # work, authenticated
     path('tags/<slug:tag_slug>/', GetPostTagView.as_view()), # work, any
     path('tags/<slug:tag_slug>/posts/', ListPostsByTagView.as_view()) # work, any
 ]

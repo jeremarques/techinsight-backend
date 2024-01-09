@@ -18,13 +18,13 @@ class CreatePostUseCase:
             profile = self.user_profile_repository.get(user_id=user_id)
 
         except NotFoundException:
-            raise NotFoundException(f'O perfil do usuário {user_id} não foi encontrado.')
+            raise NotFoundException('O perfil do usuário que você buscou não existe.')
         
         try:
             tag = self.post_tag_repository.get(id=tag_id)
 
         except NotFoundException:
-            raise NotFoundException(f'A tag {tag_id} não foi encontrada.')
+            raise NotFoundException('A tag que você escolheu não existe.')
 
         post = Post(
             profile,
@@ -62,7 +62,7 @@ class GetPostUseCase:
                 user_liked_posts_ids = []
 
         except NotFoundException:
-            raise NotFoundException(f'O post não foi encontrado.')
+            raise NotFoundException(f'Esse post não existe.')
         
         except Exception:
             raise Exception('Ocorreu um erro ao buscar o post.')
@@ -129,7 +129,7 @@ class ListPostsByTag:
                 posts.append(post)
 
         except NotFoundException:
-            raise NotFoundException(f'Esta tag não foi encontrada.')
+            raise NotFoundException('Essa tag não existe.')
         
         except Exception:
             raise Exception('Ocorreu um erro ao buscar os posts.')
@@ -143,7 +143,7 @@ class UpdatePostUseCase:
 
     def execute(self, profile_id: int, post_id: str, title: str, content: str) -> PostDTO:
         if not self.post_repository.exists(id=post_id):
-            raise NotFoundException(f'O post não existe.')
+            raise NotFoundException('Esse post não existe.')
         
         if not self.post_repository.exists(id=post_id, profile_id=profile_id):
             raise ForbiddenException('Você não pode editar um post de outro usuário.')
@@ -167,7 +167,7 @@ class DeletePostUseCase:
 
     def execute(self, profile_id: int, post_id: str) -> None:
         if not self.post_repository.exists(id=post_id):
-            raise NotFoundException('Este post não existe.')
+            raise NotFoundException('Esse post não existe.')
         
         if not self.post_repository.exists(id=post_id, profile_id=profile_id):
             raise ForbiddenException('Você não pode excluir um post de outro usuário.')

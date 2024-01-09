@@ -16,13 +16,13 @@ class CreateUserUseCase:
         exists_email = self.user_repository.exists(email=email)
         
         if exists_username and exists_email:
-            raise AlreadyExistsException(f'Este nome de usuário e e-mail já existem.')
+            raise AlreadyExistsException(f'Esse nome de usuário e e-mail já existem.')
         
         elif exists_username:
-            raise UsernameAlreadyExistsException(f'Este nome de usuário já existe.')
+            raise UsernameAlreadyExistsException(f'Esse nome de usuário já existe.')
         
         elif exists_email:
-            raise EmailAlreadyExistsException(f'Este e-mail já existe.')
+            raise EmailAlreadyExistsException(f'Esse e-mail já existe.')
 
         user = UserEntity(
             username=username,
@@ -73,19 +73,19 @@ class UpdateUserUseCase:
 
     def execute(self, id: int, username: str, email: str, full_name: str) -> UserDTO:
         if not self.user_repository.exists(id):
-            raise NotFoundException(f'O usuário com id {id} não foi encontrado.')
+            raise NotFoundException('Esse usuário não existe.')
         
         exists_username = self.user_repository.exists_but_not_mine(id, username=username)
         exists_email = self.user_repository.exists_but_not_mine(id, email=email)
         
         if exists_username and exists_email:
-            raise AlreadyExistsException(f'Este nome de usuário e e-mail já existem.')
+            raise AlreadyExistsException(f'Esse nome de usuário e e-mail já existem.')
         
         elif exists_username:
-            raise UsernameAlreadyExistsException(f'Este nome de usuário já existe.')
+            raise UsernameAlreadyExistsException(f'Esse nome de usuário já existe.')
         
         elif exists_email:
-            raise EmailAlreadyExistsException(f'Este e-mail já existe.')
+            raise EmailAlreadyExistsException(f'Esse e-mail já existe.')
         
         try:
             updated_user_entity = self.user_repository.update(id, username, email, full_name)

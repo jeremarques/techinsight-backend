@@ -18,7 +18,7 @@ class ListCreatePostCommentView(APIView):
     def post(self, request: Dict[str, Any], *args, **kwargs):
 
         profile_id = request.user.profile.id
-        post_id = kwargs.get('post_id')
+        public_id = kwargs.get('public_id')
 
         post_content = request.data.get('content')
 
@@ -27,7 +27,7 @@ class ListCreatePostCommentView(APIView):
         
         use_case = CreatePostCommentUseCase(PostCommentRepository(), PostRepository(), UserProfileRepository())
         try:
-            post_comment = use_case.execute(profile_id, post_id, post_content)
+            post_comment = use_case.execute(profile_id, public_id, post_content)
 
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
@@ -42,11 +42,11 @@ class ListCreatePostCommentView(APIView):
 
     def get(self, request: Dict[str, Any], *args, **kwargs):
 
-        post_id = kwargs.get('post_id')
+        public_id = kwargs.get('public_id')
 
         use_case = ListPostCommentsUseCase(PostCommentRepository(), PostRepository())
         try:
-            post_comments = use_case.execute(post_id)
+            post_comments = use_case.execute(public_id)
 
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)

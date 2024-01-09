@@ -3,16 +3,16 @@ from django.utils.text import slugify
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAdminUser
-from api.domain.use_cases.post_tag import CreatePostTagUseCase, GetPostTagUseCase
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
+from api.domain.use_cases.post_tag import CreatePostTagUseCase, ListTagsUseCase, GetPostTagUseCase
 from api.infrastructure.adapters.repositories.post_tag import PostTagRepository
 from api.infrastructure.adapters.serializers.post_tag_serializers import PostTagSerializer
 from api.errors import NotFoundException, AlreadyExistsException
 
 
-class CreatePostTagView(APIView):
+class ListCreatePostTagView(APIView):
 
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def post(self, request: Dict[str, Any], *args, **kwargs):
 
@@ -39,7 +39,21 @@ class CreatePostTagView(APIView):
         body = post_tag_serialized.data
 
         return Response(body, status=status.HTTP_201_CREATED)
+    
+    def get(self, request: Dict[str, Any], *args, **kwargs):
+
+        use_case = ListTagsUseCase(PostTagRepository())
+        try:
+            tags = use_case.execute()
         
+        except Exception as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        tags_serialized = PostTagSerializer(tags, many=True)
+        body = tags_serialized.data
+
+        return Response(body, status=status.HTTP_200_OK)
+
 
 class GetPostTagView(APIView):
 

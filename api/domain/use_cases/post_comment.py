@@ -11,10 +11,13 @@ class CreatePostCommentUseCase:
         self.post_repository = post_repository
         self.user_profile_repository = user_profile_repository
 
-    def execute(self, profile_id: int, post_id: str, content: str) -> PostComment:
+    def execute(self, profile_id: int, public_id: str, content: str) -> PostComment:
 
-        if not self.post_repository.exists(id=post_id):
-            raise NotFoundException(f'Este post não existe')
+        try:
+            post = self.post_repository.get(public_id=public_id)
+
+        except NotFoundException:
+            raise NotFoundException('Esse post não existe.')
 
         try: 
             user_profile = self.user_profile_repository.get(id=profile_id)
@@ -22,7 +25,7 @@ class CreatePostCommentUseCase:
         except NotFoundException as err:
             raise err
 
-        post_comment = PostComment(user_profile, post_id, content)
+        post_comment = PostComment(user_profile, post.id, content)
 
         try:
             post_comment = self.post_comment_repository.save(post_comment)
@@ -33,6 +36,28 @@ class CreatePostCommentUseCase:
         return post_comment
     
 
+class ListPostCommentsUseCase:
+    def __init__(self, post_comment_repository: PostCommentRepository, post_repository: UserProfileRepository) -> None:
+        self.post_comment_repository = post_comment_repository
+        self.post_repository = post_repository
+
+    def execute(self, public_id: str) -> list[PostComment]:
+
+        try:
+            post = self.post_repository.get(public_id=public_id)
+
+        except NotFoundException:
+            raise NotFoundException('Esse post não existe.')
+        
+        try:
+            comments = self.post_comment_repository.list_by_post(post.id)
+
+        except Exception:
+            raise Exception('Ocorreu um erro ao buscar os comentários.')
+        
+        return comments
+
+
 class UpdatePostCommentUseCase:
     def __init__(self, post_comment_repository: PostCommentRepository, user_profile_repository: UserProfileRepository) -> None:
         self.post_comment_repository = post_comment_repository
@@ -41,7 +66,7 @@ class UpdatePostCommentUseCase:
     def execute(self, profile_id: int, comment_id: int, content: str) -> PostComment:
 
         if not self.post_comment_repository.exists(id=comment_id):
-            raise NotFoundException('Este comentário não existe.')
+            raise NotFoundException('Esse comentário não existe.')
 
         if not self.post_comment_repository.exists(id=comment_id, profile_id=profile_id):
             raise ForbiddenException('Você não pode editar um comentário de outro usuário.')
@@ -64,7 +89,7 @@ class DeletePostCommentUseCase:
     def execute(self, profile_id: int, comment_id: int) -> None:
 
         if not self.post_comment_repository.exists(id=comment_id):
-            raise NotFoundException('Este comentário não existe.')
+            raise NotFoundException('Esse comentário não existe.')
 
         if not self.post_comment_repository.exists(id=comment_id, profile_id=profile_id):
             raise ForbiddenException('Você não pode excluir um comentário de outro usuário.')
@@ -76,23 +101,4 @@ class DeletePostCommentUseCase:
             raise Exception('Não foi possível excluir o comentário.')
         
         return None
-
-
-class ListPostCommentsUseCase:
-    def __init__(self, post_comment_repository: PostCommentRepository, post_repository: UserProfileRepository) -> None:
-        self.post_comment_repository = post_comment_repository
-        self.post_repository = post_repository
-
-    def execute(self, post_id: str) -> list[PostComment]:
-
-        if not self.post_repository.exists(id=post_id):
-            raise NotFoundException('Este post não existe.')
-        
-        try:
-            comments = self.post_comment_repository.list_by_post(post_id)
-
-        except Exception:
-            raise Exception('Ocorreu um erro ao buscar os comentários.')
-        
-        return comments
 

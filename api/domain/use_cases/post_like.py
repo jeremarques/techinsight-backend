@@ -10,14 +10,14 @@ class CreatePostLikeUseCase:
 
     def execute(self, profile_id: int, post_id: str) -> PostLike:
         if not self.post_repository.exists(id=post_id):
-            raise NotFoundException('Este post não existe.')
+            raise NotFoundException('Esse post não existe.')
         
         post = self.post_repository.get(id=post_id)
         if post.profile.id == profile_id:
             raise ForbiddenException('Você não pode dar like no seu próprio post.')
 
         if self.post_like_repository.exists(profile_id=profile_id, post_id=post_id):
-            raise AlreadyExistsException(f'Você já deu like nessa postagem')
+            raise AlreadyExistsException(f'Você já deu like nessa postagem.')
 
         post_like = PostLike(profile_id, post_id)
 
@@ -36,7 +36,7 @@ class DeletePostLikeUseCase:
 
     def execute(self, profile_id: int, post_id: str) -> None:
         if not self.post_like_repository.exists(profile_id=profile_id, post_id=post_id):
-            raise NotFoundException(f'Você não deu like nessa postagem')
+            raise NotFoundException(f'Você não deu like nessa postagem.')
         
         try:
             post_like = self.post_like_repository.delete(profile_id, post_id)
