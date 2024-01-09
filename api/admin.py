@@ -4,6 +4,11 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 
 from api.models.user_profile import UserProfile
+from api.models.relationship import Relationship
+from api.models.post import Post
+from api.models.post_tag import PostTag
+from api.models.post_like import PostLike
+from api.models.post_comment import PostComment
 
 User = get_user_model()
 
@@ -39,3 +44,8 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(User, UserAdmin)
 admin.site.register(UserProfile)
+admin.site.register(Relationship)
+admin.site.register(Post)
+admin.site.register(PostTag)
+admin.site.register(PostLike)
+admin.site.register(PostComment)
