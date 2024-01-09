@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from api.domain.use_cases.post import CreatePostUseCase, GetPostUseCase, ListProfilePostsUseCase, ListPostsByTag, UpdatePostUseCase, DeletePostUseCase
+from api.domain.use_cases.post import CreatePostUseCase, GetPostUseCase, ListAllPostsUseCase, ListProfilePostsUseCase, ListPostsByTag, UpdatePostUseCase, DeletePostUseCase
 from api.infrastructure.adapters.repositories.post import PostRepository
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
 from api.infrastructure.adapters.repositories.post_tag import PostTagRepository
@@ -40,6 +40,28 @@ class GetPostView(APIView):
 
         return Response(body, status=status.HTTP_200_OK)
     
+
+class ListAllPostsView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request: Dict[str, Any], *args, **kwargs):
+        if request.user.is_authenticated:
+            user_profile_id = request.user.profile.id
+        else:
+            user_profile_id = None
+        
+        use_case = ListAllPostsUseCase(PostRepository(), UserProfileRepository())
+        try:
+            posts = use_case.execute(user_profile_id)
+    
+        except Exception as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        posts_serialized = PostReadSerializer(posts, many=True)
+        body = posts_serialized.data
+
+        return Response(body, status=status.HTTP_200_OK)
+
 
 class ListProfilePostsView(APIView):
 

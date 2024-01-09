@@ -4,7 +4,7 @@ from api.views.user_views import GetAndUpdateCurrentUserView, CreateUserView, Ge
 from api.views.user_profile_views import GetAndUpdateCurrentUserProfileView, GetUserProfileView
 from api.views.relationship_views import CreateFollowView, DeleteFollowView
 from api.views.post_tag_views import ListCreatePostTagView, GetPostTagView
-from api.views.post_views import  GetPostView, ListProfilePostsView, ListPostsByTagView, CreateCurrentUserPostView, UpdateAndDeleteCurrentUserPostView
+from api.views.post_views import  GetPostView, ListProfilePostsView, ListAllPostsView, ListPostsByTagView, CreateCurrentUserPostView, UpdateAndDeleteCurrentUserPostView
 from api.views.post_like_views import CreateAndDeletePostLikeView
 from api.views.post_comment_views import ListCreatePostCommentView, UpdateAndDeletePostCommentView
 
@@ -21,6 +21,7 @@ urlpatterns = [
     path('me/profile/', GetAndUpdateCurrentUserProfileView.as_view()), # work, authenticated
     path('me/posts/', CreateCurrentUserPostView.as_view()), # work, authenticated
     path('me/posts/<str:post_id>/', UpdateAndDeleteCurrentUserPostView.as_view()), # work, authenticated
+    path('posts/', ListAllPostsView.as_view()), # work, any, temporaly
     path('posts/<str:public_id>/', GetPostView.as_view()), # work, any
     path('posts/<str:public_id>/likes/', CreateAndDeletePostLikeView.as_view()), # work, authenticated
     path('posts/<str:public_id>/comments/', ListCreatePostCommentView.as_view()), # work, any/authenticated

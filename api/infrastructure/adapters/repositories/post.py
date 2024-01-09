@@ -61,6 +61,12 @@ class PostRepository:
 
         return comments
     
+    def all(self) -> list[PostEntity]:
+        posts_models = PostModel.objects.all()
+        posts_entities = [post_model.to_entity() for post_model in posts_models]
+
+        return posts_entities
+
     def filter(self, *args, **kwargs) -> list[PostEntity]:
         posts_models = PostModel.objects.filter(*args, **kwargs)
         posts_entities = [post_model.to_entity() for post_model in posts_models]

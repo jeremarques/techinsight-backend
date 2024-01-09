@@ -72,6 +72,34 @@ class GetPostUseCase:
         return post
     
 
+class ListAllPostsUseCase:
+    def __init__(self, post_repository: PostRepository, user_profile_repository: UserProfileRepository) -> None:
+        self.post_repository = post_repository
+        self.user_profile_repository = user_profile_repository
+
+    def execute(self, user_profile_id: int | None) -> list[PostDTO]:
+        try:
+            posts_entities = self.post_repository.all()
+
+            if user_profile_id != None:
+                user_liked_posts_ids = self.user_profile_repository.liked_posts_ids(user_profile_id)
+            else:
+                user_liked_posts_ids = []
+
+            posts = []
+
+            for post_entity in posts_entities:
+                likes_counter = self.post_repository.likes(post_entity.id)
+                comments_counter = self.post_repository.comments(post_entity.id)
+                post = PostDTO(post_entity, likes_counter, comments_counter, post_entity.id in user_liked_posts_ids)
+                posts.append(post)
+
+        except Exception:
+            raise Exception('Ocorreu um erro ao buscar os posts.')
+
+        return posts
+
+
 class ListProfilePostsUseCase:
     def __init__(self, post_repository: PostRepository, user_profile_repository: UserProfileRepository) -> None:
         self.post_repository = post_repository
