@@ -79,7 +79,7 @@ class ListProfilePostsUseCase:
 
     def execute(self, profile_id: int, user_profile_id: int | None) -> list[PostDTO]:
         if not self.user_profile_repository.exists(id=profile_id):
-            return NotFoundException('Esse perfil não existe.')
+            raise NotFoundException('Esse perfil não existe.')
         
         try:
             posts_entities = self.post_repository.filter(profile_id=profile_id)
