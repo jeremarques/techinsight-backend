@@ -108,20 +108,21 @@ class TestUserUseCases(unittest.TestCase):
         self.assertEqual(result.full_name, 'Jeremias Marques')
         self.assertEqual(result.followers, 0)
         self.assertEqual(result.following, 0)
+        self.assertEqual(result.is_follower, False)
         self.assertEqual(mock_repository.called_times, 3)
-        
 
     def test_should_return_user(self):
         mock_repository = MockRepository()
 
         use_case = GetUserUseCase(mock_repository)
-        result = use_case.execute('jeremias')
+        result = use_case.execute('jeremias', None)
 
         self.assertEqual(result.username, 'jeremias')
         self.assertEqual(result.email, 'email@email.com')
         self.assertEqual(result.full_name, 'Jeremias Marques')
         self.assertEqual(result.followers, 2)
         self.assertEqual(result.following, 8)
+        self.assertEqual(result.is_follower, False)
         self.assertEqual(result.is_active, True)
         self.assertEqual(result.created_at, datetime(2024, 1, 1, 15, 32, 46, 428775))
         self.assertEqual(mock_repository.called_times, 2)

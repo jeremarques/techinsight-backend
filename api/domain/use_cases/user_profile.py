@@ -13,10 +13,10 @@ class CreateUserProfileUseCase:
         self.user_profile_repository = user_profile_repository
 
     def execute(self, user: UserEntity, name: str) -> UserProfileEntity:
-        user_profile = UserProfileEntity(user=user, name=name)
+        user_profile_entity = UserProfileEntity(user=user, name=name)
 
         try:
-            created_user_profile_entity = self.user_profile_repository.save(user_profile)
+            created_user_profile_entity = self.user_profile_repository.save(user_profile_entity)
 
         except Exception:
             raise Exception('Erro ao criar o perfil do usuário.')
@@ -45,25 +45,29 @@ class GetUserProfileUseCase:
                 following_ids = []
 
             user_dto = UserDTO(user_profile_entity.user, followers, following, user_profile_entity.user.id in following_ids)
-            user_profile = UserProfileDTO(user_profile_entity, user_dto)
+            user_profile_dto = UserProfileDTO(user_profile_entity, user_dto)
         
         except NotFoundException:
             raise NotFoundException(f'Este perfil não foi encontrado.')
         
-        return user_profile
+        except Exception:
+            raise Exception('Ocorreu um erro ao buscar o perfil.')
+        
+        return user_profile_dto
     
 
 class UpdateUserProfileUseCase:
-    def __init__(self, user_profile_repository: UserProfileRepository) -> None:
+    def __init__(self, user_profile_repository: UserProfileRepository, user_repository: UserRepository) -> None:
         self.user_profile_repository = user_profile_repository
+        self.user_repository = user_repository
 
-    def execute(self, user_id: int, name: str, profile_photo: str, website_url: str, bio: str, about: str, date_of_birth: date) -> UserProfileEntity:
+    def execute(self, user_id: int, name: str, profile_photo: str, website_url: str, bio: str, about: str, date_of_birth: date) -> UserProfileDTO:
 
         if not self.user_profile_repository.exists(user_id=user_id):
             raise NotFoundException(f'Este perfil não foi encontrado.')
         
         try:
-            updated_user = self.user_profile_repository.update(
+            updated_user_profile_entity = self.user_profile_repository.update(
                 user_id,
                 name,
                 profile_photo,
@@ -75,5 +79,13 @@ class UpdateUserProfileUseCase:
 
         except Exception:
             raise Exception('Ocorreu um erro ao atualizar o perfil.')
-
-        return updated_user
+        
+        try:
+            followers, following = self.user_repository.relations_count(updated_user_profile_entity.user.id)
+            user_dto = UserDTO(updated_user_profile_entity.user, followers, following)
+            user_profile_dto = UserProfileDTO(updated_user_profile_entity, user_dto)
+            
+        except Exception:
+            raise Exception('Ocorreu um erro ao busca o perfil atualizado.')
+        
+        return user_profile_dto

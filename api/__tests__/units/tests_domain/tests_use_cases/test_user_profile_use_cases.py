@@ -64,6 +64,11 @@ class UserMockRepository:
             is_active=True,
             created_at=datetime(2024, 1, 1, 15, 32, 46, 428775)
         )
+    
+    def relations_count(self, id: int, *args, **kwargs):
+        self.called_times += 1
+        
+        return 2, 8
 
 
 class TestUserProfileUseCases(unittest.TestCase):
@@ -99,28 +104,34 @@ class TestUserProfileUseCases(unittest.TestCase):
 
         use_case = GetUserProfileUseCase(user_profile_mock_repository, user_mock_repository)
 
-        result = use_case.execute('jeremias')
+        result = use_case.execute('jeremias', None)
 
         self.assertEqual(result.user.id, 1)
         self.assertEqual(result.name, 'Jeremias Marques')
         self.assertEqual(result.user.username, 'jeremias')
         self.assertEqual(result.user.email, 'jeremias@gmail.com')
-        self.assertEqual(result.user.password, 'password123')
         self.assertEqual(result.user.full_name, result.name)
+        self.assertEqual(result.user.followers, 2)
+        self.assertEqual(result.user.following, 8)
+        self.assertEqual(result.user.is_follower, False)
         self.assertEqual(user_profile_mock_repository.called_times, 1)
+        self.assertEqual(user_mock_repository.called_times, 2)
 
     def test_should_update_user_profile(self):
         user_profile_mock_repository = UserProfileMockRepository()
+        user_mock_repository = UserMockRepository()
 
-        use_case = UpdateUserProfileUseCase(user_profile_mock_repository)
+        use_case = UpdateUserProfileUseCase(user_profile_mock_repository, user_mock_repository)
 
         result = use_case.execute(1, 'Jeremias', 'profile_photo_url', 'website_url', 'My Bio', 'About me', '2007-11-03')
 
         self.assertEqual(result.user.id, 1)
         self.assertEqual(result.user.username, 'jeremias')
         self.assertEqual(result.user.email, 'jeremias@gmail.com')
-        self.assertEqual(result.user.password, 'password123')
         self.assertEqual(result.user.full_name, 'Jeremias Marques')
+        self.assertEqual(result.user.followers, 2)
+        self.assertEqual(result.user.following, 8)
+        self.assertEqual(result.user.is_follower, False)
         self.assertEqual(result.name, 'Jeremias')
         self.assertEqual(result.profile_photo, 'profile_photo_url')
         self.assertEqual(result.website_url, 'website_url')
@@ -128,3 +139,4 @@ class TestUserProfileUseCases(unittest.TestCase):
         self.assertEqual(result.about, 'About me')
         self.assertEqual(result.date_of_birth, '2007-11-03')
         self.assertEqual(user_profile_mock_repository.called_times, 2)
+        self.assertEqual(user_mock_repository.called_times, 1)

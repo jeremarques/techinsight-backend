@@ -29,6 +29,9 @@ class GetUserProfileView(APIView):
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
         
+        except Exception as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
         user_profile_serialized = UserProfileReadSerializer(user_profile)
         body = user_profile_serialized.data
 
@@ -40,14 +43,17 @@ class GetAndUpdateCurrentUserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request: Dict[str, Any], *args, **kwargs):
-        user_id = request.user.id
-        user_case = GetUserProfileUseCase(UserProfileRepository())
+        user_id = request.user.username
+        user_case = GetUserProfileUseCase(UserProfileRepository(), UserRepository())
 
         try:
-            current_user_profile = user_case.execute(user_id)
+            current_user_profile = user_case.execute(user_id, None)
 
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
+        
+        except Exception as err:
+            return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         current_user_profile_serialized = UserProfileReadSerializer(current_user_profile)
         body = current_user_profile_serialized.data
@@ -57,7 +63,7 @@ class GetAndUpdateCurrentUserProfileView(APIView):
 
     def put(self, request: Dict[str, Any], *args, **kwargs):
         user_id = request.user.id
-        use_case = UpdateUserProfileUseCase(UserProfileRepository())
+        use_case = UpdateUserProfileUseCase(UserProfileRepository(), UserRepository())
 
         validate_data = UserProfileCreateSerializer(data=request.data)
 
