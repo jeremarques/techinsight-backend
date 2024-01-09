@@ -22,7 +22,7 @@ urlpatterns = [
     path('me/posts/', CreateCurrentUserPostView.as_view()), # work, authenticated
     path('me/posts/<str:post_id>/', UpdateAndDeleteCurrentUserPostView.as_view()), # work, authenticated
     path('posts/<str:public_id>/', GetPostView.as_view()), # work, any
-    path('posts/<str:post_id>/likes/', CreateAndDeletePostLikeView.as_view()), # work, authenticated
+    path('posts/<str:public_id>/likes/', CreateAndDeletePostLikeView.as_view()), # work, authenticated
     path('posts/<str:public_id>/comments/', ListCreatePostCommentView.as_view()), # work, any/authenticated
     path('posts/comments/<int:comment_id>/', UpdateAndDeletePostCommentView.as_view()), # work, authenticated
     path('tags/', ListCreatePostTagView.as_view()), # work, authenticated

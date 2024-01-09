@@ -72,7 +72,7 @@ class UpdateUserUseCase:
         self.user_repository = repository
 
     def execute(self, id: int, username: str, email: str, full_name: str) -> UserDTO:
-        if not self.user_repository.exists(id):
+        if not self.user_repository.exists(id=id):
             raise NotFoundException('Esse usuário não existe.')
         
         exists_username = self.user_repository.exists_but_not_mine(id, username=username)
@@ -91,7 +91,8 @@ class UpdateUserUseCase:
             updated_user_entity = self.user_repository.update(id, username, email, full_name)
             followers, following = self.user_repository.relations_count(updated_user_entity.id)
         
-        except Exception:
+        except Exception as err:
+            print(err)
             raise Exception('Ocorreu um erro ao atualizar o usuário.')
         
 
