@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .user_serializers import UserPostReadSerializer, UserReadSerializer
+from .user_serializers import UserPostReadSerializer, UserPostResumeReadSerializer, UserReadSerializer
 
 
 class CustomDateField(serializers.DateField):
@@ -29,6 +29,13 @@ class UserProfilePostSerializer(serializers.Serializer):
     profile_photo = serializers.URLField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+
+
+class UserProfilePostResumeSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    user = UserPostResumeReadSerializer(read_only=True)
+    profile_photo = serializers.URLField()
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
 
 class UserProfileCreateSerializer(serializers.Serializer):

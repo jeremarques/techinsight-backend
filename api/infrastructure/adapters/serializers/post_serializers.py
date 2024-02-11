@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .post_tag_serializers import PostTagSerializer
-from .user_profile_serializers import UserProfilePostSerializer
+from .user_profile_serializers import UserProfilePostResumeSerializer, UserProfilePostSerializer
     
 
 class PostReadSerializer(serializers.Serializer):
@@ -16,6 +16,19 @@ class PostReadSerializer(serializers.Serializer):
     is_liked = serializers.BooleanField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+
+
+class PostResumeReadSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
+    public_id = serializers.CharField()
+    profile = UserProfilePostResumeSerializer(read_only=True)
+    title = serializers.CharField()
+    slug = serializers.SlugField()
+    tag = PostTagSerializer(read_only=True)
+    likes = serializers.IntegerField()
+    comments = serializers.IntegerField()
+    is_liked = serializers.BooleanField()
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     
 
 class PostCreateSerializer(serializers.Serializer):

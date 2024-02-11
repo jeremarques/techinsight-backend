@@ -9,7 +9,7 @@ from api.infrastructure.adapters.repositories.post import PostRepository
 from api.infrastructure.adapters.repositories.user import UserRepository
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
 from api.infrastructure.adapters.repositories.post_tag import PostTagRepository
-from api.infrastructure.adapters.serializers.post_serializers import PostReadSerializer, PostCreateSerializer, PostUpdateSerializer
+from api.infrastructure.adapters.serializers.post_serializers import PostReadSerializer, PostCreateSerializer, PostResumeReadSerializer, PostUpdateSerializer
 from api.errors import NotFoundException, ForbiddenException
 
 
@@ -58,7 +58,7 @@ class ListAllPostsView(APIView):
         except Exception as err:
             return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        posts_serialized = PostReadSerializer(posts, many=True)
+        posts_serialized = PostResumeReadSerializer(posts, many=True)
         body = posts_serialized.data
 
         return Response(body, status=status.HTTP_200_OK)
@@ -87,7 +87,7 @@ class ListProfilePostsView(APIView):
         except Exception as err:
             return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-        posts_serialized = PostReadSerializer(posts, many=True)
+        posts_serialized = PostResumeReadSerializer(posts, many=True)
         body = posts_serialized.data
 
         return Response(body, status=status.HTTP_200_OK)
@@ -115,7 +115,7 @@ class ListPostsByTagView(APIView):
         except Exception as err:
             return Response({ 'error': str(err) }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-        posts_serialized = PostReadSerializer(posts, many=True)
+        posts_serialized = PostResumeReadSerializer(posts, many=True)
         body = posts_serialized.data
 
         return Response(body, status=status.HTTP_200_OK)

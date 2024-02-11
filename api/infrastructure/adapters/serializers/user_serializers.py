@@ -20,9 +20,16 @@ class UserPostReadSerializer(serializers.Serializer):
 
     id = serializers.IntegerField()
     username = serializers.CharField()
-    is_follower = serializers.BooleanField()
+    is_follower = serializers.BooleanField(read_only=True)
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+
+
+class UserPostResumeReadSerializer(serializers.Serializer):
+
+    id = serializers.IntegerField()
+    username = serializers.CharField()
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
 
 
 class UserCreateSerializer(serializers.Serializer):
