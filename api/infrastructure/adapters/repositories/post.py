@@ -1,4 +1,5 @@
 import pytz
+from uuid import UUID
 from datetime import datetime
 from django.db.models import F
 from api.domain.entities.post import Post as PostEntity
@@ -35,7 +36,7 @@ class PostRepository:
 
         return post_entity
     
-    def update(self, id: str, title: str, content: str) -> PostEntity:
+    def update(self, id: UUID, title: str, content: str) -> PostEntity:
         post_model = PostModel.objects.filter(id=id)
         post_model.update(title=title, content=content, updated_at=self.dt_local)
         
@@ -49,13 +50,13 @@ class PostRepository:
 
         return None
     
-    def likes(self, post_id: str) -> int:
+    def likes(self, post_id: UUID) -> int:
         post = PostModel.objects.get(id=post_id)
         likes = post.likes.count()
 
         return likes
 
-    def comments(self, post_id: str) -> int:
+    def comments(self, post_id: UUID) -> int:
         post = PostModel.objects.get(id=post_id)
         comments = post.comments.count()
 

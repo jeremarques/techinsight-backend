@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from api.domain.use_cases.post import CreatePostUseCase, GetPostUseCase, ListAllPostsUseCase, ListProfilePostsUseCase, ListPostsByTag, UpdatePostUseCase, DeletePostUseCase
 from api.infrastructure.adapters.repositories.post import PostRepository
+from api.infrastructure.adapters.repositories.user import UserRepository
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
 from api.infrastructure.adapters.repositories.post_tag import PostTagRepository
 from api.infrastructure.adapters.serializers.post_serializers import PostReadSerializer, PostCreateSerializer, PostUpdateSerializer
@@ -24,7 +25,7 @@ class GetPostView(APIView):
 
         public_id = kwargs.get('public_id')
 
-        use_case = GetPostUseCase(PostRepository(), UserProfileRepository())
+        use_case = GetPostUseCase(PostRepository(), UserProfileRepository(), UserRepository())
 
         try:
             post = use_case.execute(public_id, user_profile_id)

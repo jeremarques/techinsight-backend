@@ -1,5 +1,9 @@
+from api.domain.dtos.full_post_dto import FullPostDTO
+from api.domain.dtos.user_dto import UserDTO
+from api.domain.dtos.user_profile_dto import UserProfileDTO
 from api.domain.entities.post import Post
 from api.infrastructure.adapters.repositories.post import PostRepository
+from api.infrastructure.adapters.repositories.user import UserRepository
 from api.infrastructure.adapters.repositories.user_profile import UserProfileRepository
 from api.infrastructure.adapters.repositories.post_tag import PostTagRepository
 from api.domain.dtos.post_dto import PostDTO
@@ -46,20 +50,27 @@ class CreatePostUseCase:
     
 
 class GetPostUseCase:
-    def __init__(self, post_repository: PostRepository, user_profile_repository: UserProfileRepository) -> None:
+    def __init__(self, post_repository: PostRepository, user_profile_repository: UserProfileRepository, user_repository: UserRepository) -> None:
         self.post_repository = post_repository
         self.user_profile_repository = user_profile_repository
+        self.user_repository = user_repository
 
-    def execute(self, public_id: str, user_profile_id: int | None) -> PostDTO:
+    def execute(self, public_id: str, user_profile_id: int | None) -> FullPostDTO:
         try:
             post_entity = self.post_repository.get(public_id=public_id)
             likes_counter = self.post_repository.likes(post_entity.id)
             comments_counter = self.post_repository.comments(post_entity.id)
-
+            post_user_profile_entity = post_entity.profile
+            followers, following = self.user_repository.relations_count(post_user_profile_entity.user.id)
+            
             if user_profile_id != None:
+                user_profile_entity = self.user_profile_repository.get(id=user_profile_id)
                 user_liked_posts_ids = self.user_profile_repository.liked_posts_ids(user_profile_id)
+                following_ids = self.user_repository.following_ids(user_profile_entity.user.id)
+
             else:
                 user_liked_posts_ids = []
+                following_ids = []
 
         except NotFoundException:
             raise NotFoundException(f'Esse post não existe.')
@@ -67,7 +78,9 @@ class GetPostUseCase:
         except Exception:
             raise Exception('Ocorreu um erro ao buscar o post.')
         
-        post = PostDTO(post_entity, likes_counter, comments_counter, post_entity.id in user_liked_posts_ids)
+        post_user_dto = UserDTO(post_user_profile_entity.user, followers, following, post_user_profile_entity.user.id in following_ids)
+        user_profile_dto = UserProfileDTO(post_user_profile_entity, post_user_dto)
+        post = FullPostDTO(post_entity, user_profile_dto, likes_counter, comments_counter, post_entity.id in user_liked_posts_ids)
 
         return post
     
