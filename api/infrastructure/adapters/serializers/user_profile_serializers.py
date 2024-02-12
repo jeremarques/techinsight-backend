@@ -14,6 +14,7 @@ class UserProfileReadSerializer(serializers.Serializer):
     user = UserReadSerializer(read_only=True)
     name = serializers.CharField(max_length=60)
     profile_photo = serializers.URLField()
+    posts = serializers.IntegerField()
     website_url = serializers.URLField()
     bio = serializers.CharField(max_length=200)
     about = serializers.CharField()

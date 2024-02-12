@@ -34,6 +34,12 @@ class UserProfileRepository:
         posts_ids = [like.post_id for like in likes]
 
         return posts_ids
+    
+    def posts(self, profile_id: int) -> int:
+        profile = UserProfileModel.objects.get(id=profile_id)
+        posts = profile.posts.count()
+
+        return posts
 
     def update(self, user_id: int, name: str, profile_photo: str, website_url: str, bio: str, about: str, date_of_birth: date) -> UserProfileEntity:
 

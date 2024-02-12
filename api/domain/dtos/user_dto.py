@@ -1,7 +1,7 @@
 from api.domain.entities.user import User
 
 class UserDTO:
-    def __init__(self, user: User, followers: int = None, following: int = None, is_follower: bool = False):
+    def __init__(self, user: User, followers: int = 0, following: int = 0, is_follower: bool = False):
         self.id = user.id
         self.username = user.username
         self.email = user.email

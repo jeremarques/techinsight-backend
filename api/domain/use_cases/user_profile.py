@@ -39,13 +39,14 @@ class GetUserProfileUseCase:
         try:
             user_profile_entity = self.user_profile_repository.get(user_id=user.id)
             followers, following = self.user_repository.relations_count(user.id)
+            posts = self.user_profile_repository.posts(user_profile_entity.id)
             if user_id != None:
                 following_ids = self.user_repository.following_ids(user_id)
             else:
                 following_ids = []
 
             user_dto = UserDTO(user_profile_entity.user, followers, following, user_profile_entity.user.id in following_ids)
-            user_profile_dto = UserProfileDTO(user_profile_entity, user_dto)
+            user_profile_dto = UserProfileDTO(user_profile_entity, user_dto, posts)
         
         except NotFoundException:
             raise NotFoundException(f'Esse perfil não existe.')
