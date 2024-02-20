@@ -40,10 +40,10 @@ class UserProfilePostResumeSerializer(serializers.Serializer):
 
 
 class UserProfileCreateSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=60)
-    profile_photo = serializers.URLField()
-    website_url = serializers.URLField()
-    bio = serializers.CharField(max_length=200)
-    about = serializers.CharField()
-    date_of_birth = CustomDateField(allow_null=True, format="%Y-%m-%d")
+    name = serializers.CharField(max_length=60, required=False)
+    profile_photo = serializers.URLField(required=False)
+    website_url = serializers.URLField(required=False)
+    bio = serializers.CharField(max_length=200, required=False)
+    about = serializers.CharField(required=False)
+    date_of_birth = CustomDateField(allow_null=True, format="%Y-%m-%d", required=False)
 

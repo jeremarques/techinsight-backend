@@ -54,7 +54,7 @@ class UserProfileRepository:
             date_of_birth=date_of_birth,
             updated_at=self.dt_local
         )
-        profile_updated_entity = self.get(user_id)
+        profile_updated_entity = self.get(user=user_id)
 
         return profile_updated_entity
         

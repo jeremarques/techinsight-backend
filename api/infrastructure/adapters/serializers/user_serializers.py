@@ -8,6 +8,7 @@ class UserReadSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     username = serializers.CharField()
     full_name = serializers.CharField()
+    email = serializers.EmailField()
     followers = serializers.IntegerField()
     following = serializers.IntegerField()
     is_follower = serializers.BooleanField()

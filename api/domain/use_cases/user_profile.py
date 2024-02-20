@@ -78,7 +78,7 @@ class UpdateUserProfileUseCase:
                 date_of_birth
             )
 
-        except Exception:
+        except Exception as err:
             raise Exception('Ocorreu um erro ao atualizar o perfil.')
         
         try:

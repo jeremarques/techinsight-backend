@@ -73,11 +73,11 @@ class GetAndUpdateCurrentUserProfileView(APIView):
         try:
             profile_updated_entity = use_case.execute(
                 user_id,
-                validate_data.validated_data.get('name'),
-                validate_data.validated_data.get('profile_photo'),
-                validate_data.validated_data.get('website_url'),
-                validate_data.validated_data.get('bio'),
-                validate_data.validated_data.get('about'),
+                validate_data.validated_data.get('name') or "",
+                validate_data.validated_data.get('profile_photo') or "",
+                validate_data.validated_data.get('website_url') or "",
+                validate_data.validated_data.get('bio') or "",
+                validate_data.validated_data.get('about') or "",
                 validate_data.validated_data.get('date_of_birth')
             )
 
