@@ -41,9 +41,9 @@ class UserProfilePostResumeSerializer(serializers.Serializer):
 
 class UserProfileCreateSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=60, required=False)
-    profile_photo = serializers.URLField(required=False)
-    website_url = serializers.URLField(required=False)
-    bio = serializers.CharField(max_length=200, required=False)
-    about = serializers.CharField(required=False)
+    profile_photo = serializers.URLField(allow_blank=True, required=False)
+    website_url = serializers.URLField(allow_blank=True, required=False)
+    bio = serializers.CharField(max_length=200, allow_blank=True, required=False)
+    about = serializers.CharField(allow_blank=True, required=False)
     date_of_birth = CustomDateField(allow_null=True, format="%Y-%m-%d", required=False)
 

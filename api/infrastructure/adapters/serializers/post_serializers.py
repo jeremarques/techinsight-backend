@@ -35,7 +35,7 @@ class PostCreateSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=120)
     slug = serializers.SlugField(max_length=120)
     content = serializers.CharField()
-    tag_id = serializers.IntegerField()
+    tag_id = serializers.IntegerField(allow_null=True, required=False)
 
 
 class PostUpdateSerializer(serializers.Serializer):

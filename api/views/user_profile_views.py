@@ -68,6 +68,7 @@ class GetAndUpdateCurrentUserProfileView(APIView):
         validate_data = UserProfileCreateSerializer(data=request.data)
 
         if not validate_data.is_valid():
+            print(validate_data.errors)
             return Response({ 'error': validate_data.errors }, status=status.HTTP_400_BAD_REQUEST)
 
         try:
