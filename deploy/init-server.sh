@@ -1,3 +1,3 @@
 #!/bin/sh
 
-gunicorn techinsight.wsgi --bind 0.0.0.0:80
+gunicorn techinsight.wsgi --bind 0.0.0.0:$PORT

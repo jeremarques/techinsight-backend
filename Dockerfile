@@ -16,8 +16,6 @@ COPY . /app/
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 80
-
 ENTRYPOINT ["sh", "deploy/entrypoint.sh"]
 
 CMD ["sh", "deploy/init-server.sh"]
