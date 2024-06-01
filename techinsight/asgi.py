@@ -1,5 +1,5 @@
 """
-ASGI config for fastinsight project.
+ASGI config for techinsight project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fastinsight.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'techinsight.settings')
 
 application = get_asgi_application()
