@@ -1,3 +1,4 @@
+from uuid import UUID
 import pytz
 from typing import Optional
 from datetime import datetime
@@ -8,8 +9,8 @@ from .user_profile import UserProfile
 @dataclass(frozen=True)
 class PostComment:
     profile: UserProfile
-    post_id: str
     content: str
+    post_id: Optional[UUID] = None
     id: Optional[int] = None
     created_at: Optional[datetime] = field(default_factory=datetime.now)
     updated_at: Optional[datetime] = None

@@ -18,7 +18,7 @@ class ListCreatePostCommentView(APIView):
     def post(self, request: Dict[str, Any], *args, **kwargs):
 
         profile_id = request.user.profile.id
-        public_id = kwargs.get('public_id')
+        public_id = str(kwargs.get('public_id'))
 
         post_content = request.data.get('content')
 
@@ -42,7 +42,7 @@ class ListCreatePostCommentView(APIView):
 
     def get(self, request: Dict[str, Any], *args, **kwargs):
 
-        public_id = kwargs.get('public_id')
+        public_id = str(kwargs.get('public_id'))
 
         use_case = ListPostCommentsUseCase(PostCommentRepository(), PostRepository())
         try:

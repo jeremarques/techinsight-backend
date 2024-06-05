@@ -160,10 +160,10 @@ class UpdateAndDeleteCurrentUserPostView(APIView):
     
     def put(self, request: Dict[str, Any], *args, **kwargs):
         profile_id = request.user.profile.id
-        post_id = kwargs.get('post_id')
+        post_id = str(kwargs.get('post_id'))
         data = {
-            'title': request.data.get('title'),
-            'content': request.data.get('content')
+            'title': str(request.data.get('title')),
+            'content': str(request.data.get('content'))
         }
         validate_data = PostUpdateSerializer(data=data)
 
@@ -173,7 +173,7 @@ class UpdateAndDeleteCurrentUserPostView(APIView):
         use_case = UpdatePostUseCase(PostRepository())
 
         try:
-            updated_post = use_case.execute(profile_id, post_id, data.get('title'), data.get('content'))
+            updated_post = use_case.execute(profile_id, post_id, data['title'], data['content'])
 
         except NotFoundException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)

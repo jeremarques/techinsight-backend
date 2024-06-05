@@ -17,7 +17,7 @@ class ListCreatePostTagView(APIView):
     def post(self, request: Dict[str, Any], *args, **kwargs):
 
         data = {
-            'name': request.data.get('name'),
+            'name': str(request.data.get('name')),
             'slug': slugify(request.data.get('name'))
         }
         validate_data = PostTagSerializer(data=data)
@@ -27,7 +27,7 @@ class ListCreatePostTagView(APIView):
         
         use_case = CreatePostTagUseCase(PostTagRepository())
         try:
-            post_tag = use_case.execute(data.get('name'), data.get('slug'))
+            post_tag = use_case.execute(data['name'], data['slug'])
         
         except AlreadyExistsException as err:
             return Response({ 'error': str(err) }, status=status.HTTP_400_BAD_REQUEST)
@@ -60,7 +60,7 @@ class GetPostTagView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request: Dict[str, Any], *args, **kwargs):
-        tag_slug = kwargs.get('tag_slug')
+        tag_slug = str(kwargs.get('tag_slug'))
         use_case = GetPostTagUseCase(PostTagRepository())
 
         try:

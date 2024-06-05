@@ -1,3 +1,4 @@
+from uuid import UUID
 from api.domain.dtos.full_post_dto import FullPostDTO
 from api.domain.dtos.user_dto import UserDTO
 from api.domain.dtos.user_profile_dto import UserProfileDTO
@@ -190,9 +191,9 @@ class UpdatePostUseCase:
             raise ForbiddenException('Você não pode editar um post de outro usuário.')
         
         try:
-            updated_post_entity = self.post_repository.update(post_id, title, content)
-            likes_counter = self.post_repository.likes(post_id)
-            comments_counter = self.post_repository.comments(post_id)
+            updated_post_entity = self.post_repository.update(UUID(post_id), title, content)
+            likes_counter = self.post_repository.likes(UUID(post_id))
+            comments_counter = self.post_repository.comments(UUID(post_id))
 
         except Exception:
             raise Exception('Ocorreu um erro ao editar o post.')
@@ -214,7 +215,7 @@ class DeletePostUseCase:
             raise ForbiddenException('Você não pode excluir um post de outro usuário.')
         
         try:
-            self.post_repository.delete(post_id)
+            self.post_repository.delete(UUID(post_id))
 
         except Exception:
             raise Exception('Ocorreu um erro ao tentar excluir o post.')

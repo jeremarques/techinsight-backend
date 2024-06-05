@@ -12,7 +12,7 @@ class CreateUserProfileUseCase:
     def __init__(self, user_profile_repository: UserProfileRepository) -> None:
         self.user_profile_repository = user_profile_repository
 
-    def execute(self, user: UserEntity, name: str) -> UserProfileEntity:
+    def execute(self, user: UserEntity, name: str | None) -> UserProfileEntity:
         user_profile_entity = UserProfileEntity(user=user, name=name)
 
         try:

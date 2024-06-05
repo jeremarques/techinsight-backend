@@ -1,7 +1,6 @@
 import pytz
 from uuid import UUID
 from datetime import datetime
-from django.db.models import F
 from api.domain.entities.post import Post as PostEntity
 from api.models.post import Post as PostModel
 from api.errors import NotFoundException, IntegrityError
@@ -44,19 +43,19 @@ class PostRepository:
 
         return post_updated_entity
     
-    def delete(self, id: str) -> None:
-        post_tag_model = PostModel.objects.get(id=id)
-        post_tag_model.delete()
+    def delete(self, id: UUID) -> None:
+        post_model = PostModel.objects.get(id=id)
+        post_model.delete()
 
         return None
     
-    def likes(self, post_id: UUID) -> int:
+    def likes(self, post_id: UUID | None) -> int:
         post = PostModel.objects.get(id=post_id)
         likes = post.likes.count()
 
         return likes
 
-    def comments(self, post_id: UUID) -> int:
+    def comments(self, post_id: UUID | None) -> int:
         post = PostModel.objects.get(id=post_id)
         comments = post.comments.count()
 

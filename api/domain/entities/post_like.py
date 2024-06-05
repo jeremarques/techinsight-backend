@@ -1,15 +1,13 @@
+from uuid import UUID
 import pytz
 from typing import Optional
 from datetime import datetime
 from dataclasses import dataclass, field
 
-from .user_profile import UserProfile
-from .post import Post
-
 @dataclass(frozen=True)
 class PostLike:
     profile_id: int
-    post_id: str
+    post_id: Optional[UUID] = None
     id: Optional[int] = None
     created_at: Optional[datetime] = field(default_factory=datetime.now)
     

@@ -1,6 +1,6 @@
 import pytz
+from typing import Tuple
 from datetime import datetime
-from django.db.models import F
 from api.domain.entities.user import User as UserEntity
 from api.models.user import User as UserModel
 from api.errors import NotFoundException
@@ -43,14 +43,14 @@ class UserRepository:
 
         return updated_user_entity
     
-    def relations_count(self, user_id: int) -> int:
+    def relations_count(self, user_id: int | None) -> Tuple[int, int]:
         user = UserModel.objects.get(id=user_id)
         followers = user.followers.count()
         following = user.following.count()
 
         return followers, following
     
-    def following_ids(self, user_id: int) -> list[int]:
+    def following_ids(self, user_id: int | None) -> list[int]:
         user = UserModel.objects.get(id=user_id)
         following = user.following.all()
 

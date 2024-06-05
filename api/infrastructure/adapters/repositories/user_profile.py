@@ -35,7 +35,7 @@ class UserProfileRepository:
 
         return posts_ids
     
-    def posts(self, profile_id: int) -> int:
+    def posts(self, profile_id: int | None) -> int:
         profile = UserProfileModel.objects.get(id=profile_id)
         posts = profile.posts.count()
 

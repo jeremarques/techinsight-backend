@@ -128,7 +128,7 @@ class GetUserView(APIView):
         else:
             user_id = None
 
-        username = kwargs.get('username')
+        username = str(kwargs.get('username'))
         use_case = GetUserUseCase(UserRepository())
         
         try:

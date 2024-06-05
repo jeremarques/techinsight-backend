@@ -25,7 +25,7 @@ class CreatePostCommentUseCase:
         except NotFoundException as err:
             raise err
 
-        post_comment = PostComment(user_profile, post.id, content)
+        post_comment = PostComment(user_profile, content, post.id)
 
         try:
             post_comment = self.post_comment_repository.save(post_comment)
@@ -37,7 +37,7 @@ class CreatePostCommentUseCase:
     
 
 class ListPostCommentsUseCase:
-    def __init__(self, post_comment_repository: PostCommentRepository, post_repository: UserProfileRepository) -> None:
+    def __init__(self, post_comment_repository: PostCommentRepository, post_repository: PostRepository) -> None:
         self.post_comment_repository = post_comment_repository
         self.post_repository = post_repository
 

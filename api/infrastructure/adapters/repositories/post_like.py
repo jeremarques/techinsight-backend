@@ -1,3 +1,4 @@
+from uuid import UUID
 from api.domain.entities.post_like import PostLike as PostLikeEntity
 from api.models.post_like import PostLike as PostLikeModel
 
@@ -10,7 +11,7 @@ class PostLikeRepository:
 
         return post_like_entity
     
-    def delete(self, profile_id: int, post_id: str) -> None:
+    def delete(self, profile_id: int, post_id: UUID | None) -> None:
         post_like_model = PostLikeModel.objects.get(profile_id=profile_id, post_id=post_id)
         post_like_model.delete()
 

@@ -1,3 +1,4 @@
+from uuid import UUID
 import pytz
 from datetime import datetime
 from api.domain.entities.post_comment import PostComment as PostCommentEntity
@@ -15,7 +16,7 @@ class PostCommentRepository:
 
         return post_comment_entity
     
-    def list_by_post(self, post_id: str) -> list[PostCommentEntity]:
+    def list_by_post(self, post_id: UUID | None) -> list[PostCommentEntity]:
         post_comments_models = PostCommentModel.objects.filter(post_id=post_id)
         post_comments_entities = [post_comment_model.to_entity() for post_comment_model in post_comments_models]
 

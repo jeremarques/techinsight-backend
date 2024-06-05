@@ -17,7 +17,7 @@ class CreateAndDeletePostLikeView(APIView):
     def post(self, request: Dict[str, Any], *args, **kwargs):
 
         profile_id = request.user.profile.id
-        public_id = kwargs.get('public_id')
+        public_id = str(kwargs.get('public_id'))
         
         use_case = CreatePostLikeUseCase(PostLikeRepository(), PostRepository())
         try:
@@ -43,7 +43,7 @@ class CreateAndDeletePostLikeView(APIView):
     def delete(self, request: Dict[str, Any], *args, **kwargs):
         
         profile_id = request.user.profile.id
-        public_id = kwargs.get('public_id')
+        public_id = str(kwargs.get('public_id'))
 
         use_case = DeletePostLikeUseCase(PostLikeRepository(), PostRepository())
 
