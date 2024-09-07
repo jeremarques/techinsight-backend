@@ -1,7 +1,7 @@
 
 # TechInsight - Backend
 
-Este repositório contém o backend do projeto TechInsight, um site focado na comunidade tech. Seu objetivo é promover a livre disseminação de conhecimento por meio de publicações, comentários e outras interações.
+Este repositório contém o backend do projeto TechInsight (você pode encontrar o frontend [aqui](https://github.com/jeremarques/techinsight-frontend/)), um site focado na comunidade tech. Seu objetivo é promover a livre disseminação de conhecimento por meio de publicações, comentários e outras interações.
 
 
 ## Stack utilizada
