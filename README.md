@@ -16,18 +16,18 @@ Rodar o TechInsight localmente em sua máquina é super simples.
 Clone o repositório e entre dentro da pasta
 
 ```bash
-  cd techinsight-backend
+cd techinsight-backend
 ```
 
 Crie o ambiente virtual ou utilize o Docker, com o Dokerfile na raiz do projeto,
 
 ```bash
-  # Utilizando o virtual-env
-  python -m venv venv
-  source ./venv/bin/activate
+# Utilizando o virtual-env
+python -m venv venv
+source ./venv/bin/activate
   
-  # Instale as dependências do projeto
-  pip install -r requirements.txt
+# Instale as dependências do projeto
+pip install -r requirements.txt
 ```
 
 Crie o arquivo .env a partir do .env.example e preencha com suas respectivas informações.
@@ -35,11 +35,11 @@ Crie o arquivo .env a partir do .env.example e preencha com suas respectivas inf
 Após isso, inicie o servidor de desenvolvimento
 
 ```bash
-  # Somente localhost (127.0.0.1) na porta 8000
-  python manage.py runserver
+# Somente localhost (127.0.0.1) na porta 8000
+python manage.py runserver
 
-  # localhost e IP na porta 8000
-  python manage.py runserver 0.0.0.0:8000cha
+# localhost e IP na porta 8000
+python manage.py runserver 0.0.0.0:8000cha
 ```
 
 É isso, agora o projeto estará rodando localmente em sua máquina.
@@ -64,8 +64,6 @@ O TechInsight é, inicialmente, um projeto de estudo, pois ainda faltam diversas
 ## Autor
 
 - [@jeremarques](https://www.github.com/jeremarques)
-
-
 
 ## Licença
 
