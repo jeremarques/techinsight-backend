@@ -53,8 +53,6 @@ Contribuições são bem-vindas e altamente encorajadas! Se você deseja ajudar 
 
 Veja `CONTRIBUTING.md` para saber como começar.
 
-Por favor, siga o `código de conduta` desse projeto.
-
 
 ## História e motivações
 
