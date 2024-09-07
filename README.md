@@ -16,6 +16,7 @@ Rodar o TechInsight localmente em sua máquina é super simples.
 Clone o repositório e entre dentro da pasta
 
 ```bash
+git clone git@github.com:jeremarques/techinsight-backend.git
 cd techinsight-backend
 ```
 
