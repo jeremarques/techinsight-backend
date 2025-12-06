@@ -40,7 +40,7 @@ Após isso, inicie o servidor de desenvolvimento
 python manage.py runserver
 
 # localhost e IP na porta 8000
-python manage.py runserver 0.0.0.0:8000cha
+python manage.py runserver 0.0.0.0:8000
 ```
 
 É isso, agora o projeto estará rodando localmente em sua máquina.
