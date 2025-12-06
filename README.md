@@ -20,7 +20,7 @@ git clone git@github.com:jeremarques/techinsight-backend.git
 cd techinsight-backend
 ```
 
-Crie o ambiente virtual ou utilize o Docker, com o Dokerfile na raiz do projeto,
+Crie o ambiente virtual ou utilize o Docker, com o Dockerfile na raiz do projeto,
 
 ```bash
 # Utilizando o virtual-env
